@@ -1,13 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GyroscopeInfo : MonoBehaviour {
+public class GyroscopeInfo : MonoBehaviour
+{
 
     private Vector3 m_RotateAngle;
-	// Use this for initialization
-	void Start () {
-	
-	}
+    // Use this for initialization
+    void Start()
+    {
+
+    }
 
     // Update is called once per frame
     void Update()
@@ -33,7 +35,5 @@ public class GyroscopeInfo : MonoBehaviour {
     {
         return -Input.acceleration.y;
     }
-
-    public 
 
 }
