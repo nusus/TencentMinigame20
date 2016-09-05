@@ -23,4 +23,17 @@ public class GyroscopeInfo : MonoBehaviour {
             print(string.Format("x:{0}, y:{1}, z:{2}", Input.acceleration.x, Input.acceleration.y, Input.acceleration.z));
     }
 
+
+    public float GetSinRotateAngle()
+    {
+        return -Input.acceleration.x;
+    }
+
+    public float GetCosRotateAngle()
+    {
+        return -Input.acceleration.y;
+    }
+
+    public 
+
 }
