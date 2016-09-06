@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 80b5fb2fad268514aa32f5d05085e9f7
+timeCreated: 1465804672
+licenseType: Pro
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - explosion: {instanceID: 0}
+  - playerExplosion: {instanceID: 0}
+  - countText: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
