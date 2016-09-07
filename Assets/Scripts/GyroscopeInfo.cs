@@ -38,6 +38,14 @@ public class GyroscopeInfo : MonoBehaviour {
         if (fingerCount > 0)
             print(targetAngles);
 
+        ChangeGravityDirection();
+        //print(targetAngles);
+    }
+
+    private void ChangeGravityDirection()
+    {
+        Physics.gravity = new Vector3(Input.acceleration.x, Input.acceleration.y, Input.acceleration.z);
+        //print(Physics.gravity);
     }
 
     private float AngularInterpolation(float currentAngles, float targetAngles, float angleVelocity)
@@ -62,25 +70,11 @@ public class GyroscopeInfo : MonoBehaviour {
     public float GetSinRotateAngle()
     {
         return Mathf.Sin(m_CurrentAngles);
-        //return -Input.acceleration.x;
-        //return Mathf.Sin(m_RotateAngles);
     }
 
     public float GetCosRotateAngle()
     {
         return Mathf.Cos(m_CurrentAngles);
-        //return -Input.acceleration.y;
-        //return Mathf.Cos(m_RotateAngles);
-    }
-
-    public Vector3 RotateCoordinate(Vector3 origVec3)
-    {
-        Vector2 row1 = new Vector2(GetCosRotateAngle(), GetSinRotateAngle());
-        Vector2 row2 = new Vector2(-GetSinRotateAngle(), GetCosRotateAngle());
-        Vector2 coor = new Vector2(origVec3.x, origVec3.y);
-        origVec3.x = Vector2.Dot(row1, coor);
-        origVec3.y = Vector2.Dot(row2, coor);
-        return origVec3;
-    }
+    }  
 
 }
