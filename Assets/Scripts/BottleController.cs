@@ -4,8 +4,14 @@ using System;
 
 public class BottleController : CircleMoveController
 {
-    protected override Vector3 RotateCoordinate(Vector3 origVec3)
+    new public void Update()
     {
-        return RotateCoordinateImp(origVec3, ClockWise.ClockWise);
+        base.Update();
+        RotateWater();
+    }
+
+    protected void RotateWater()
+    {
+        this.gameObject.transform.Rotate(Vector3.forward, -m_GyroscopeInfo.GetRotateAngle());
     }
 }
