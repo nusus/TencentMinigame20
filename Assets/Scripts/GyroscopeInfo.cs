@@ -21,7 +21,7 @@ public class GyroscopeInfo : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        if(Input.acceleration.x <= 0.0f && Input.acceleration.y <=0.0f)
+        if(Input.acceleration.x <= 0.0f && Input.acceleration.y <=0.0f && Input.acceleration.z <= 0)
         {
             float targetAngles = Mathf.Asin(-Input.acceleration.x);
             targetAngles = Denoise(m_CurrentTargetAngles, targetAngles, m_DenosieThreshold);
