@@ -1,4 +1,10 @@
-﻿using UnityEngine;
+﻿/*
+ Resolution fit 
+ let all cameras fit 1920 x 1080 if possible
+ written by hearstzhang @ 2016.9.8
+ */
+
+using UnityEngine;
 using System.Collections;
 
 public class ResolutionFit : MonoBehaviour
