@@ -18,6 +18,7 @@ public class RotateResult
 
     /// <summary>
     /// 角度制，非弧度制
+    /// 返回值范围：-90-90,向下为正，向上为负
     /// </summary>
     private float m_XSkewAngle { get; set; }
     private float m_YSkewAngle { get; set; }
@@ -59,7 +60,7 @@ public class RotateResult
         m_XSkewAngle = radians2degree(Mathf.Asin(m_XBasisVector.z));
         m_YSkewAngle = radians2degree(Mathf.Asin(m_YBasisVector.z));
         m_ZSkewAngle = radians2degree(Mathf.Asin(m_ZBasisVector.z));
-
+ 
 
     }
 
@@ -83,7 +84,7 @@ public class RotateResult
         float dotresult = dot(a, a);
         if(Mathf.Abs(dotresult) < 1e-16)
         {
-            return 0.0;
+            return 0;
         }else
         {
             return Mathf.Sqrt(dotresult);
@@ -98,6 +99,15 @@ public class RotateResult
     {
         Vector3 c = new Vector3(a.x - b.x, a.y - b.y, a.z - b.z);
         return c;
+    }
+
+    static void main(string[] args)
+    {
+        RotateResult result = new RotateResult();
+        Vector3 test1 = new Vector3(1, 1, 1);
+        result.Update(test1);
+
+        System.Console.WriteLine(result.m_XSkewAngle);
     }
 
 }
