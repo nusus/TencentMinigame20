@@ -18,7 +18,7 @@ public class RotateResult
 
     /// <summary>
     /// 角度制，非弧度制
-    /// 返回值范围：-90-90,向下为正，向上为负
+    /// 返回值范围：-90-90,向上为正，向下为负
     /// </summary>
     private float m_XSkewAngle { get; set; }
     private float m_YSkewAngle { get; set; }
@@ -32,28 +32,27 @@ public class RotateResult
     /// <param name="newGravity">B坐标系下(0,0,-1)的向量在A坐标系下的坐标</param>
     public void Update(Vector3 newGravity)
     {
-
+        //A坐标系的基向量
         Vector3 x = new Vector3(1, 0, 0);
         Vector3 y = new Vector3(0, 1, 0);
         Vector3 z = new Vector3(0, 0, 1);
 
-        Vector3 gravity = dot(newGravity, 1 / norm(newGravity));
+        Vector3 vertical_up             = dot(newGravity, -1 / norm(newGravity));
 
-        Vector3 x_projection_on_gravity = dot(newGravity, dot(x, newGravity) / (norm(x) * norm(newGravity)));
-        Vector3 new_x                   = minus(x, x_projection_on_gravity);
+        Vector3 x_projection_on_up      = dot(vertical_up, dot(x, vertical_up) / (norm(x)));
+        Vector3 new_x                   = minus(x, x_projection_on_up);
         new_x                           = dot(new_x, 1 / norm(new_x));
 
-        Vector3 y_projection_on_gravity = dot(newGravity, dot(y, newGravity) / (norm(y) * norm(newGravity)));
+        Vector3 y_projection_on_up      = dot(vertical_up, dot(y, vertical_up) / (norm(y)));
         Vector3 y_projection_on_newx    = dot(new_x, dot(y, new_x) / (norm(y) * norm(new_x)));
-        Vector3 new_y                   = minus(y, plus(y_projection_on_gravity, y_projection_on_newx));
+        Vector3 new_y                   = minus(y, plus(y_projection_on_up, y_projection_on_newx));
         new_y                           = dot(new_y, 1 / norm(new_y));
 
-
-        m_XBasisVector = new Vector3(dot(x,new_x), dot(x,new_y),dot(x,gravity));
+        m_XBasisVector = new Vector3(dot(x,new_x), dot(x,new_y),dot(x, vertical_up));
         m_XBasisVector = dot(m_XBasisVector, 1 / norm(m_XBasisVector));
-        m_YBasisVector = new Vector3(dot(y,new_x), dot(y,new_y),dot(y,gravity));
+        m_YBasisVector = new Vector3(dot(y,new_x), dot(y,new_y),dot(y, vertical_up));
         m_YBasisVector = dot(m_YBasisVector, 1 / norm(m_YBasisVector));
-        m_ZBasisVector = new Vector3(dot(z, new_x), dot(z, new_y), dot(z, gravity));
+        m_ZBasisVector = new Vector3(dot(z, new_x), dot(z, new_y), dot(z, vertical_up));
         m_ZBasisVector = dot(m_ZBasisVector, 1 / norm(m_ZBasisVector));
 
 
@@ -99,6 +98,7 @@ public class RotateResult
         return c;
     }
 
+    /*
     static void main(string[] args)
     {
         RotateResult result = new RotateResult();
@@ -107,5 +107,6 @@ public class RotateResult
 
         System.Console.WriteLine(result.m_XSkewAngle);
     }
+    */
 
 }
