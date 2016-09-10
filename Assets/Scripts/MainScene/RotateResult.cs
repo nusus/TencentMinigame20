@@ -10,7 +10,7 @@ using System.Collections;
 /// </summary>
 public class RotateResult
 {
-
+    private static float zero = 1e - 6;
     private Vector3 m_XBasisVector { get; set; }
     private Vector3 m_YBasisVector { get; set; }
     private Vector3 m_ZBasisVector { get; set; }
@@ -32,6 +32,26 @@ public class RotateResult
     /// <param name="newGravity">B坐标系下(0,0,-1)的向量在A坐标系下的坐标</param>
     public void Update(Vector3 newGravity)
     {
+        //处理基向量x,y,z和重力向量重合的特殊情况
+        if(Mathf.Abs(newGravity.x) < zero && Mathf.Abs(newGravity.y) < zero && (Mathf.Abs(newGravity.z) - 1.0) < zero)
+        {
+            newGravity.x += (float)zero;
+            newGravity.y += (float)zero;
+            newGravity.z -= 2*(float)zero;
+        }
+        if (Mathf.Abs(newGravity.x) < zero && (Mathf.Abs(newGravity.y) - 1.0) < zero && Mathf.Abs(newGravity.z) < zero)
+        {
+            newGravity.x += (float)zero;
+            newGravity.y -= 2*(float)zero;
+            newGravity.z += (float)zero;
+        }
+        if ((Mathf.Abs(newGravity.y) - 1.0)  < zero && Mathf.Abs(newGravity.y) < zero && Mathf.Abs(newGravity.z) < zero)
+        {
+            newGravity.x -= 2*(float)zero;
+            newGravity.y += (float)zero;
+            newGravity.z += (float)zero;
+        }
+
         //A坐标系的基向量
         Vector3 x = new Vector3(1, 0, 0);
         Vector3 y = new Vector3(0, 1, 0);
@@ -79,9 +99,9 @@ public class RotateResult
     private float norm(Vector3 a)
     {
         float dotresult = dot(a, a);
-        if(Mathf.Abs(dotresult) < 1e-16)
+        if(Mathf.Abs(dotresult) < zero)
         {
-            return 0;
+            return (float)(zero);
         }else
         {
             return Mathf.Sqrt(dotresult);
