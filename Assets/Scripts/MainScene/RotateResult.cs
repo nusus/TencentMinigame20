@@ -60,8 +60,6 @@ public class RotateResult
         m_XSkewAngle = radians2degree(Mathf.Asin(m_XBasisVector.z));
         m_YSkewAngle = radians2degree(Mathf.Asin(m_YBasisVector.z));
         m_ZSkewAngle = radians2degree(Mathf.Asin(m_ZBasisVector.z));
- 
-
     }
 
     //radians to degrees
