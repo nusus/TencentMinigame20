@@ -45,7 +45,7 @@ public class RotateResult
             newGravity.y -= 2*(float)zero;
             newGravity.z += (float)zero;
         }
-        if ((Mathf.Abs(newGravity.y) - 1.0)  < zero && Mathf.Abs(newGravity.y) < zero && Mathf.Abs(newGravity.z) < zero)
+        if ((Mathf.Abs(newGravity.x) - 1.0)  < zero && Mathf.Abs(newGravity.y) < zero && Mathf.Abs(newGravity.z) < zero)
         {
             newGravity.x -= 2*(float)zero;
             newGravity.y += (float)zero;
