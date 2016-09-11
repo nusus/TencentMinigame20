@@ -1,18 +1,21 @@
 ﻿using UnityEngine;
-using System.Collections;
+using UnityEngine.UI;
 using System.Collections.Generic;
-using System.Linq;
 using Facebook.Unity;
 
 public class InitializeFacebookLogin : MonoBehaviour
 {
     [Header("用户ID显示器")]
     [Tooltip("用于显示登陆用户ID的GUIText组件")]
-    public GUIText text;
+    public Text text;
 
+    void Start()
+    {
+        text.text = null;
+    }
 
     //Initialize Facebook SDK here
-    public void loginButClick()
+    public void Click()
     {
         if (!FB.IsInitialized)
         {
@@ -23,11 +26,6 @@ public class InitializeFacebookLogin : MonoBehaviour
             FB.ActivateApp();
         }
         CallFBLogin();
-    }
-
-    void start()
-    {
-        text.text = null;
     }
     
     private void initCallback()
@@ -63,7 +61,7 @@ public class InitializeFacebookLogin : MonoBehaviour
             "public_profile",
             "email",
             "user_friends"
-        }, this.HandleResult);
+        }, HandleResult);
     }
 
     protected void HandleResult(IResult result)
