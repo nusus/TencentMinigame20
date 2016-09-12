@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.IO;
 
 /// <summary>
 /// 如果需要使用一些数学工具，例如反三角函数什么的，请参考unity文档，mathf
@@ -10,19 +11,19 @@ using System.Collections;
 /// </summary>
 public class RotateResult
 {
-    private static float zero = 1e - 6;
-    private Vector3 m_XBasisVector { get; set; }
-    private Vector3 m_YBasisVector { get; set; }
-    private Vector3 m_ZBasisVector { get; set; }
+    private static float zero = (float)1e-6;
+    public Vector3 m_XBasisVector { get; set; }
+    public Vector3 m_YBasisVector { get; set; }
+    public Vector3 m_ZBasisVector { get; set; }
 
 
     /// <summary>
     /// 角度制，非弧度制
     /// 返回值范围：-90-90,向上为正，向下为负
     /// </summary>
-    private float m_XSkewAngle { get; set; }
-    private float m_YSkewAngle { get; set; }
-    private float m_ZSkewAngle { get; set; }
+    public float m_XSkewAngle { get; set; }
+    public float m_YSkewAngle { get; set; }
+    public float m_ZSkewAngle { get; set; }
 
 
     /// <summary>
@@ -32,20 +33,21 @@ public class RotateResult
     /// <param name="newGravity">B坐标系下(0,0,-1)的向量在A坐标系下的坐标</param>
     public void Update(Vector3 newGravity)
     {
+
         //处理基向量x,y,z和重力向量重合的特殊情况
-        if(Mathf.Abs(newGravity.x) < zero && Mathf.Abs(newGravity.y) < zero && (Mathf.Abs(newGravity.z) - 1.0) < zero)
+        if (Mathf.Abs(newGravity.x) < zero && Mathf.Abs(newGravity.y) < zero && Mathf.Abs(Mathf.Abs(newGravity.z) - 1) < zero)
         {
             newGravity.x += (float)zero;
             newGravity.y += (float)zero;
             newGravity.z -= 2*(float)zero;
         }
-        if (Mathf.Abs(newGravity.x) < zero && (Mathf.Abs(newGravity.y) - 1.0) < zero && Mathf.Abs(newGravity.z) < zero)
+        if (Mathf.Abs(newGravity.x) < zero && Mathf.Abs(Mathf.Abs(newGravity.y) - 1) < zero && Mathf.Abs(newGravity.z) < zero)
         {
             newGravity.x += (float)zero;
             newGravity.y -= 2*(float)zero;
             newGravity.z += (float)zero;
         }
-        if ((Mathf.Abs(newGravity.x) - 1.0)  < zero && Mathf.Abs(newGravity.y) < zero && Mathf.Abs(newGravity.z) < zero)
+        if (Mathf.Abs(Mathf.Abs(newGravity.x) - 1)  < zero && Mathf.Abs(newGravity.y) < zero && Mathf.Abs(newGravity.z) < zero)
         {
             newGravity.x -= 2*(float)zero;
             newGravity.y += (float)zero;
@@ -63,11 +65,17 @@ public class RotateResult
         Vector3 new_x                   = minus(x, x_projection_on_up);
         new_x                           = dot(new_x, 1 / norm(new_x));
 
-        Vector3 y_projection_on_up      = dot(vertical_up, dot(y, vertical_up) / (norm(y)));
-        Vector3 y_projection_on_newx    = dot(new_x, dot(y, new_x) / (norm(y) * norm(new_x)));
-        Vector3 new_y                   = minus(y, plus(y_projection_on_up, y_projection_on_newx));
-        new_y                           = dot(new_y, 1 / norm(new_y));
+        Vector3 random   = new Vector3(Random.RandomRange((float)0.0, (float)1.0), Random.RandomRange((float)0.0, (float)1.0), Random.RandomRange((float)0.0, (float)1.0));
+        random           = dot(random, 1 / norm(random));
+ 
 
+        Vector3 random_projection_on_up      = dot(vertical_up, dot(random, vertical_up) );
+        Vector3 random_projection_on_newx    = dot(new_x, dot(random, new_x) );
+        Vector3 new_y                   = minus(random, plus(random_projection_on_up, random_projection_on_newx));
+        new_y                           = dot(new_y, 1 / norm(new_y));
+ 
+
+        //x,y,z in B coordinate system
         m_XBasisVector = new Vector3(dot(x,new_x), dot(x,new_y),dot(x, vertical_up));
         m_XBasisVector = dot(m_XBasisVector, 1 / norm(m_XBasisVector));
         m_YBasisVector = new Vector3(dot(y,new_x), dot(y,new_y),dot(y, vertical_up));
@@ -79,6 +87,7 @@ public class RotateResult
         m_XSkewAngle = radians2degree(Mathf.Asin(m_XBasisVector.z));
         m_YSkewAngle = radians2degree(Mathf.Asin(m_YBasisVector.z));
         m_ZSkewAngle = radians2degree(Mathf.Asin(m_ZBasisVector.z));
+
     }
 
     //radians to degrees
@@ -94,7 +103,7 @@ public class RotateResult
     }
     private float dot(Vector3 a, Vector3 b)
     {
-        return a.x * b.x + a.y * b.y + a.z * b.z;
+        return Vector3.Dot(a, b);
     }
     private float norm(Vector3 a)
     {
