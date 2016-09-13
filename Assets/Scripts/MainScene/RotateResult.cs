@@ -12,19 +12,67 @@ using System.IO;
 public class RotateResult
 {
     private static float zero = (float)1e-6;
-    public Vector3 m_XBasisVector { get; set; }
-    public Vector3 m_YBasisVector { get; set; }
-    public Vector3 m_ZBasisVector { get; set; }
+    public Vector3 m_XBasisVector;
+    //public  Vector3 XBasisVector
+    //{
+    //    get
+    //    {
+    //        return m_XBasisVector;
+    //    }
+    //}
+    public Vector3 m_YBasisVector;
+    //public Vector3 YBasisVector
+    //{
+    //    get
+    //    {
+    //        return m_YBasisVector;
+    //    }
+    //}
 
+    public Vector3 m_ZBasisVector;
+    //public Vector3 ZBasisVector
+    //{
+    //    get
+    //    {
+    //        return m_ZBasisVector;
+    //    }
+    //}
 
     /// <summary>
     /// 角度制，非弧度制
     /// 返回值范围：-90-90,向上为正，向下为负
     /// </summary>
-    public float m_XSkewAngle { get; set; }
-    public float m_YSkewAngle { get; set; }
-    public float m_ZSkewAngle { get; set; }
+    public float m_XSkewAngle;
+    //public float XSkewAngle
+    //{
+    //    get
+    //    {
+    //        return m_XSkewAngle;
+    //    }
 
+    //}
+
+    public float m_YSkewAngle;
+    //public float YSkewAngle
+    //{
+    //    get {
+    //        return m_YSkewAngle;
+    //    }
+    //}
+
+    public float m_ZSkewAngle;
+    //public float ZSkewAngle
+    //{
+    //    get
+    //    {
+    //        return m_ZSkewAngle;
+    //    }
+    //}
+
+    public RotateResult()
+    {
+
+    }
 
     /// <summary>
     /// 更新A坐标系下基向量在B坐标系下的坐标

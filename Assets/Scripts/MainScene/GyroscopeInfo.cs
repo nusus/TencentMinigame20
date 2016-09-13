@@ -2,15 +2,33 @@
 using System.Collections;
 
 public class GyroscopeInfo : MonoBehaviour {
+    public float m_XDeltaSkewAngle;
+    public float m_YDeltaSkewAngle;
+    public float m_ZDeltaSkewAngle;
 
-    private float m_CurrentTargetAngles;
-    private float m_LastTargetAngles;
+    private int m_FramesToUpdateRotateAngle;
 
-    public float m_DenosieThreshold;
+    private RotateResult m_PhoneRotateResult;
+    private Vector3 m_NewGravity;
+    private float[] m_RotateAngleBuffer;
+
+    private float m_LastRotateAngle;
+    private float m_CurrentRotateAngle;
+
+
+    /// <summary>
+    /// FOR DEBUG
+    /// </summary>
+    /// 
+    public bool m_IsDebug;
 	// Use this for initialization
 	void Start () {
-        m_CurrentTargetAngles = Mathf.Asin(-Input.acceleration.x);
-        m_LastTargetAngles = m_CurrentTargetAngles;
+        m_FramesToUpdateRotateAngle = 10;
+
+        m_PhoneRotateResult = new RotateResult();
+        m_NewGravity = new Vector3(0.0f, 0.0f, 0.0f);
+        m_RotateAngleBuffer = new float[10];
+
     }
 
     void FixedUpdate()
@@ -21,13 +39,38 @@ public class GyroscopeInfo : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        if(Input.acceleration.x <= 0.0f && Input.acceleration.y <=0.0f && Input.acceleration.z <= 0)
-        {
-            float targetAngles = Mathf.Asin(-Input.acceleration.x);
-            targetAngles = Denoise(m_CurrentTargetAngles, targetAngles, m_DenosieThreshold);
-            m_LastTargetAngles = m_CurrentTargetAngles;
-            m_CurrentTargetAngles = targetAngles;
+        m_NewGravity[0] = Input.acceleration.x;
+        m_NewGravity[1] = Input.acceleration.y;
+        m_NewGravity[2] = Input.acceleration.z;
+        m_PhoneRotateResult.Update(m_NewGravity);
 
+        m_FramesToUpdateRotateAngle--;
+
+        if( ((m_PhoneRotateResult.m_ZSkewAngle > - m_ZDeltaSkewAngle) && (m_PhoneRotateResult.m_ZSkewAngle < m_ZDeltaSkewAngle) ) 
+            &&((m_PhoneRotateResult.m_XSkewAngle > 0)&&(m_PhoneRotateResult.m_XSkewAngle < 90))
+            &&true    )
+        {
+            m_RotateAngleBuffer[9 - m_FramesToUpdateRotateAngle] = m_PhoneRotateResult.m_XSkewAngle;         
+        }
+
+        //denoise the phone_rotate_angle
+        if ( 0 == m_FramesToUpdateRotateAngle)
+        {
+            m_LastRotateAngle = m_CurrentRotateAngle;
+            m_CurrentRotateAngle = 0.0f;
+            for (int i = 0; i < m_RotateAngleBuffer.Length; i++)
+            {
+                m_CurrentRotateAngle += m_RotateAngleBuffer[i];
+            }
+            m_CurrentRotateAngle /= 10;
+            ChangeGravityDirection();
+
+            m_FramesToUpdateRotateAngle = 10;
+        }
+
+
+        if(m_IsDebug)
+        {
             int fingerCount = 0;
             foreach (Touch touch in Input.touches)
             {
@@ -36,30 +79,21 @@ public class GyroscopeInfo : MonoBehaviour {
             }
 
             if (fingerCount > 0)
-                print(targetAngles);
-
-            //ChangeGravityDirection();
+                print(m_CurrentRotateAngle);
         }
     }
 
     private void ChangeGravityDirection()
     {
-        Physics2D.gravity = new Vector2(Input.acceleration.x, Input.acceleration.y);
+        Physics2D.gravity = new Vector2(-Mathf.Sin(m_CurrentRotateAngle), -Mathf.Cos(m_CurrentRotateAngle));
         //print(Physics.gravity);
-    }
-
-    private float Denoise(float prev, float curr, float rang)
-    {
-        if (Mathf.Abs(curr - prev) <= rang)
-        {
-            return prev;
-        }
-        return curr;
     }
     
     public float GetRotateAngle()
     {
-        return -(m_CurrentTargetAngles - m_LastTargetAngles) * Mathf.Rad2Deg ;
+        float ret = m_CurrentRotateAngle - m_LastRotateAngle ;
+        m_LastRotateAngle = m_CurrentRotateAngle;
+        return ret;
     }  
 
 }
