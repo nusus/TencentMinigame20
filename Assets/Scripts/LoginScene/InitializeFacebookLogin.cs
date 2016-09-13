@@ -63,7 +63,6 @@ public class InitializeFacebookLogin : MonoBehaviour
             "email",
             "user_friends"
         }, HandleResult);
-        SceneManager.LoadScene("DrinkWater");
     }
 
     protected void HandleResult(IResult result)
@@ -92,6 +91,7 @@ public class InitializeFacebookLogin : MonoBehaviour
             {
                 Debug.Log(perm);
             }
+            SceneManager.LoadScene("DrinkWater");
         }
         else
         {
