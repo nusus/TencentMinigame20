@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using Facebook.Unity;
 
@@ -62,6 +63,7 @@ public class InitializeFacebookLogin : MonoBehaviour
             "email",
             "user_friends"
         }, HandleResult);
+        SceneManager.LoadScene("DrinkWater");
     }
 
     protected void HandleResult(IResult result)
