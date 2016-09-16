@@ -15,12 +15,22 @@ public class CircleMoveController : MonoBehaviour {
     // Update is called once per frame
     public void Update()
     {
-        this.RotateCoordinate();
+        if (m_GyroscopeInfo.IsRotateAngleNeededToBeUpdate())
+        {
+            //print(m_GyroscopeInfo.GetRotateAngle());
+            this.RotateCoordinate();
+            this.RotateSelf();
+        }
 
     }
 
     protected void RotateCoordinate()
     {
         this.gameObject.transform.RotateAround(Vector3.zero, Vector3.forward, -m_GyroscopeInfo.GetRotateAngle());
+    }
+
+    protected virtual void RotateSelf()
+    {
+
     }
 }

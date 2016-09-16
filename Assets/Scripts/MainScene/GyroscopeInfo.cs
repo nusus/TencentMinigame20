@@ -7,6 +7,7 @@ public class GyroscopeInfo : MonoBehaviour {
     public float m_ZDeltaSkewAngle;
 
     private int m_FramesToUpdateRotateAngle;
+    public int m_FixedFramesToUpdateRotateAngle;
 
     private RotateResult m_PhoneRotateResult;
     private Vector3 m_NewGravity;
@@ -15,7 +16,7 @@ public class GyroscopeInfo : MonoBehaviour {
     private float m_LastRotateAngle;
     private float m_CurrentRotateAngle;
 
-
+    private bool m_IsRotateAngleToBeUpdated;
     /// <summary>
     /// FOR DEBUG
     /// </summary>
@@ -23,11 +24,13 @@ public class GyroscopeInfo : MonoBehaviour {
     public bool m_IsDebug;
 	// Use this for initialization
 	void Start () {
-        m_FramesToUpdateRotateAngle = 10;
+        m_FramesToUpdateRotateAngle = m_FixedFramesToUpdateRotateAngle;
+
+        m_IsRotateAngleToBeUpdated = true;
 
         m_PhoneRotateResult = new RotateResult();
         m_NewGravity = new Vector3(0.0f, 0.0f, 0.0f);
-        m_RotateAngleBuffer = new float[10];
+        m_RotateAngleBuffer = new float[m_FixedFramesToUpdateRotateAngle];
 
     }
 
@@ -46,11 +49,21 @@ public class GyroscopeInfo : MonoBehaviour {
 
         m_FramesToUpdateRotateAngle--;
 
-        if( ((m_PhoneRotateResult.m_ZSkewAngle > - m_ZDeltaSkewAngle) && (m_PhoneRotateResult.m_ZSkewAngle < m_ZDeltaSkewAngle) ) 
-            &&((m_PhoneRotateResult.m_XSkewAngle > 0)&&(m_PhoneRotateResult.m_XSkewAngle < 90))
+        m_IsRotateAngleToBeUpdated = false;
+
+        if ( ((m_PhoneRotateResult.m_ZSkewAngle > - m_ZDeltaSkewAngle) && (m_PhoneRotateResult.m_ZSkewAngle < m_ZDeltaSkewAngle) ) 
+            //&&((m_PhoneRotateResult.m_XSkewAngle > 0) && (m_PhoneRotateResult.m_XSkewAngle < 90))
+            && (m_PhoneRotateResult.m_YSkewAngle > 0)
             &&true    )
-        {
-            m_RotateAngleBuffer[9 - m_FramesToUpdateRotateAngle] = m_PhoneRotateResult.m_XSkewAngle;         
+        {            
+            float XSkewAngle = m_PhoneRotateResult.m_XSkewAngle;
+            if (XSkewAngle > 90)
+            {
+                XSkewAngle = 90;
+            }
+
+            if (XSkewAngle < 0) XSkewAngle = 0;
+            m_RotateAngleBuffer[m_FixedFramesToUpdateRotateAngle - 1 - m_FramesToUpdateRotateAngle] = XSkewAngle;
         }
 
         //denoise the phone_rotate_angle
@@ -62,10 +75,12 @@ public class GyroscopeInfo : MonoBehaviour {
             {
                 m_CurrentRotateAngle += m_RotateAngleBuffer[i];
             }
-            m_CurrentRotateAngle /= 10;
+            m_CurrentRotateAngle /= m_FixedFramesToUpdateRotateAngle;
             ChangeGravityDirection();
 
-            m_FramesToUpdateRotateAngle = 10;
+            m_FramesToUpdateRotateAngle = m_FixedFramesToUpdateRotateAngle;
+
+            m_IsRotateAngleToBeUpdated = true;
         }
 
 
@@ -85,15 +100,25 @@ public class GyroscopeInfo : MonoBehaviour {
 
     private void ChangeGravityDirection()
     {
-        Physics2D.gravity = new Vector2(-Mathf.Sin(m_CurrentRotateAngle), -Mathf.Cos(m_CurrentRotateAngle));
+        //Physics2D.setGravity(new Vector2(-Mathf.Sin(m_CurrentRotateAngle), -Mathf.Cos(m_CurrentRotateAngle)));
         //print(Physics.gravity);
     }
     
     public float GetRotateAngle()
     {
         float ret = m_CurrentRotateAngle - m_LastRotateAngle ;
-        m_LastRotateAngle = m_CurrentRotateAngle;
+        //m_LastRotateAngle = m_CurrentRotateAngle;
         return ret;
+    }
+    
+    public float GetCurrrentRotateAngle()
+    {
+        return m_CurrentRotateAngle;
+    }
+    
+    public bool IsRotateAngleNeededToBeUpdate()
+    {
+        return m_IsRotateAngleToBeUpdated;
     }  
 
 }
