@@ -21,6 +21,6 @@ public class CircleMoveController : MonoBehaviour {
 
     protected void RotateCoordinate()
     {
-        this.gameObject.transform.RotateAround(Vector3.zero, Vector3.forward, m_GyroscopeInfo.GetRotateAngle());
+        this.gameObject.transform.RotateAround(Vector3.zero, Vector3.forward, -m_GyroscopeInfo.GetRotateAngle());
     }
 }

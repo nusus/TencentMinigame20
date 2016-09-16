@@ -11,10 +11,10 @@ public class BabyController : CircleMoveController {
     new public void Update()
     {
         base.Update();
-        RotateSelf();
+        RotateBaby();
     }
 
-    protected void RotateSelf()
+    protected void RotateBaby()
     {
         this.gameObject.transform.Rotate(Vector3.forward, - m_GyroscopeInfo.GetRotateAngle());
     }

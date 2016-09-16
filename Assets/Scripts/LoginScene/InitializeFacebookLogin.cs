@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using Facebook.Unity;
 
@@ -90,6 +91,7 @@ public class InitializeFacebookLogin : MonoBehaviour
             {
                 Debug.Log(perm);
             }
+            SceneManager.LoadScene("DrinkWater");
         }
         else
         {
