@@ -64,6 +64,7 @@ public class weishuiPanelCtrl: MonoBehaviour {
     public void ResumeTick()
     {
         isInTick = true;
+		startTime = DateTime.Now.Ticks;
     }
 
     /// <summary>
@@ -79,7 +80,7 @@ public class weishuiPanelCtrl: MonoBehaviour {
 	void LaunchweishuijieguoPanel(){
 		weishuiPanel.SetActive(false);
 		weishuijieguoPanel.SetActive(true);
-        isInTick = false;
+		StopTick();
 	}
 
 	private void OnExitClick(GameObject go)

@@ -4,7 +4,8 @@ using System.Collections;
 
 public class weishuijieguoPanelCtrl : MonoBehaviour {
 
-    public GameObject weishuiPanel = null;
+	public GameObject waterPanel = null;
+	public GameObject weishuiPanel = null;
     public Button yesButton = null;
     public Button noButton = null;
 	public Button closeButton = null;
@@ -24,12 +25,7 @@ public class weishuijieguoPanelCtrl : MonoBehaviour {
     private void OnYesBtnClick(GameObject go)
     {
         this.gameObject.SetActive(false);
-        weishuiPanel.SetActive(true);
-        weishuiPanelCtrl weishuiCtrl = weishuiPanel.GetComponent<weishuiPanelCtrl>();
-        if (weishuiCtrl != null)
-        {
-            weishuiCtrl.StartTick();
-        }
+        waterPanel.SetActive(true);
     }
 
     private void OnNoBtnClick(GameObject go)

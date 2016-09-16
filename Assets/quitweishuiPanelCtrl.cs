@@ -24,8 +24,14 @@ public class quitweishuiPanelCtrl : MonoBehaviour {
 
     private void OnYesClick(GameObject go)
     {
-        this.gameObject.SetActive(false);
+		weishuiPanel.SetActive(false);
+		this.gameObject.SetActive(false);
         weishuijieguoPanel.SetActive(true);
+		weishuiPanelCtrl weishuiCtrl = weishuiPanel.GetComponent<weishuiPanelCtrl>();
+		if (weishuiCtrl != null)
+		{
+			weishuiCtrl.StopTick();
+		}
     }
 
     private void OnCloseClick(GameObject go)
