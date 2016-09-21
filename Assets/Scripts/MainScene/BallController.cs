@@ -47,8 +47,10 @@ public class BallController : MonoBehaviour
         {
             Vector2 touchingPos = new Vector2(Input.touches[0].position.x, Input.touches[0].position.y);
             touchingPos = Camera.main.ScreenToWorldPoint(touchingPos);
+            print("touching position:{1}"+ touchingPos.ToString());
             if (IsTouchingBall(touchingPos))
             {
+                print("touching ball");
                 m_SlingshotState = SlingshotState.Ready;
 
             }
@@ -69,16 +71,8 @@ public class BallController : MonoBehaviour
 
         if (Input.GetMouseButtonUp(0))
         {
-            //计算小球合力方向  
-            Vector3 Vec3L = new Vector3(-2F - MousePos.x, 1.8F - MousePos.y, 0F - MousePos.z);
-            Vector3 Vec3R = new Vector3(2F - MousePos.x, 1.8F - MousePos.y, 0F - MousePos.z);
-            Vector3 Dir = (Vec3L + Vec3R).normalized;
-            //获取刚体结构  
-            transform.GetComponent<Rigidbody>().useGravity = true;
-            transform.GetComponent<Rigidbody>().AddForce(Dir * 10F, ForceMode.Impulse);
-            //恢复LineRenderer  
-            LineL.SetPosition(0, new Vector3(0F, 1.8F, 0F));
-            LineR.SetPosition(0, new Vector3(0F, 1.8F, 0F));
+            ShotBall();
+            RopeRevert();
         }
     }
 
@@ -97,9 +91,9 @@ public class BallController : MonoBehaviour
     protected void ShotBall()
     {
         //TODO:
-        Vector3 dir = m_BallOrigPosition - transform.position;
+        Vector3 dir = (m_BallOrigPosition - transform.position).normalized;
         transform.GetComponent<Rigidbody>().useGravity = true;
-        transform.GetComponent<Rigidbody>().AddForce(Dir * 10F, ForceMode.Impulse);
+        transform.GetComponent<Rigidbody>().AddForce(dir * 10F, ForceMode.Impulse);
     }
 
     protected void RopeRevert()
