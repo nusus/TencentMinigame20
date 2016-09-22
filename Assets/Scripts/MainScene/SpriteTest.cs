@@ -14,6 +14,7 @@ public class SpriteTest : MonoBehaviour {
         print(m_Sprite.rect);
         print(m_Sprite.textureRect);
         print(m_Sprite.pixelsPerUnit);
+        print(transform.lossyScale);
 	}
 	
 	// Update is called once per frame

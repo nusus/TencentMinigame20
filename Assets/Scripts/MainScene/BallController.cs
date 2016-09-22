@@ -5,8 +5,8 @@ public class BallController : MonoBehaviour
 {
     protected enum SlingshotState { Idle, Ready  };
 
-    //鼠标位置  
-    private Vector3 m_TouchPosition;
+    //小球原来的位置  
+    private Vector3 m_BallOrigPosition;
 
     //左侧LineRenderer  
     private LineRenderer m_LineLeft;
@@ -14,6 +14,11 @@ public class BallController : MonoBehaviour
     private LineRenderer m_LineRight;
 
     private Sprite m_FoodSprite;
+
+    private SlingshotState m_SlingshotState;
+
+    public Vector2 m_BallMovingAreaLeftBottom;
+    public Vector2 m_BallMovingAreaRightTop;
 
     void Start()
     {
@@ -24,6 +29,113 @@ public class BallController : MonoBehaviour
             transform.GetComponent<LineRenderer>();
 
         m_FoodSprite = this.gameObject.GetComponent<SpriteRenderer>().sprite;
+
+        m_BallOrigPosition = transform.position;
+
+        m_SlingshotState = SlingshotState.Ready;
+    }
+
+    void Update()
+    {
+        if (Input.touchCount <= 0 || Input.touchCount >1)
+        {
+            m_SlingshotState = SlingshotState.Idle;
+            return;
+        }
+
+        if (Input.touches[0].phase == TouchPhase.Began)
+        {
+            Vector2 touchingPos = new Vector2(Input.touches[0].position.x, Input.touches[0].position.y);
+            touchingPos = Camera.main.ScreenToWorldPoint(touchingPos);
+            print("touching position:{1}"+ touchingPos.ToString());
+            if (IsTouchingBall(touchingPos))
+            {
+                print("touching ball");
+                m_SlingshotState = SlingshotState.Ready;
+
+            }
+        }
+
+        if (Input.touches[0].phase == TouchPhase.Moved)
+        {
+            if (m_SlingshotState == SlingshotState.Ready)
+            {
+                ChangeBallPosition();
+                ChangeRopePosition();           
+            }
+            else
+            {
+                m_SlingshotState = SlingshotState.Idle;
+            }
+        }
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            ShotBall();
+            RopeRevert();
+        }
+    }
+
+    protected void ChangeBallPosition()
+    {
+        Vector2 newBallPos = new Vector2(transform.position.x, transform.position.y);
+        newBallPos += Input.touches[0].deltaPosition;
+        transform.position = ClampTouchingPosition(newBallPos);
+    }
+
+    protected void ChangeRopePosition()
+    {
+        ChangeRopePosition(transform.position);
+    }
+
+    protected void ShotBall()
+    {
+        //TODO:
+        Vector3 dir = (m_BallOrigPosition - transform.position).normalized;
+        transform.GetComponent<Rigidbody>().useGravity = true;
+        transform.GetComponent<Rigidbody>().AddForce(dir * 10F, ForceMode.Impulse);
+    }
+
+    protected void RopeRevert()
+    {
+        ChangeRopePosition(m_BallOrigPosition);
+    }
+
+    private void ChangeRopePosition(Vector3 pos)
+    {
+        m_LineLeft.SetPosition(1, pos);
+        m_LineRight.SetPosition(1, pos);
+    }
+  
+
+    protected bool IsTouchingBall(Vector2 touchingPosition)
+    {
+        bool ret = false;
+        Vector2 leftBottom = new Vector2(
+            transform.position.x - m_FoodSprite.rect.width * transform.lossyScale.x / 2,
+            transform.position.y - m_FoodSprite.rect.height * transform.lossyScale.y / 2
+            );
+        Vector2 rightTop = new Vector2(
+            transform.position.x + m_FoodSprite.rect.width * transform.lossyScale.x / 2,
+            transform.position.y + m_FoodSprite.rect.height * transform.lossyScale.y / 2
+            );
+
+        if(touchingPosition.x >= leftBottom.x 
+            && touchingPosition.x <= rightTop.x
+            && touchingPosition.y >= leftBottom.y
+            && touchingPosition.y <= rightTop.y)
+        {
+            ret = true;
+        }
+        return ret;
+    }
+
+    Vector3 ClampTouchingPosition(Vector2  touchingPosition)
+    {
+        Vector3 ret = new Vector3(touchingPosition.x, touchingPosition.y, transform.position.z);
+        ret.x = Mathf.Clamp(touchingPosition.x, m_BallMovingAreaLeftBottom.x, m_BallMovingAreaRightTop.x);
+        ret.y = Mathf.Clamp(touchingPosition.y, m_BallMovingAreaLeftBottom.y, m_BallMovingAreaRightTop.y);
+        return ret;
     }
 
     //void Update()
