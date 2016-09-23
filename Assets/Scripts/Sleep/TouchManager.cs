@@ -1,4 +1,12 @@
-﻿using UnityEngine;
+﻿/*
+TouchManager.cs
+Using to manage touch event 
+Attach to empty object which is always alive,
+or main camera if this is always alive.
+Copyright (C) 2016 hearstzhang, all rights reserved.
+ */
+
+using UnityEngine;
 using System.Collections;
 
 public class TouchManager : MonoBehaviour

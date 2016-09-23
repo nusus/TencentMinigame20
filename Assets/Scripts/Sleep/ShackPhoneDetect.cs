@@ -1,4 +1,11 @@
-﻿using UnityEngine;
+﻿/*
+ ShackPhoneDetect
+ Using this for detecting shaking. 
+ Attach this to an empty object which is always alive, or main camera
+ Copyright (C) 2015 hearstzhang, all rights reserved. 
+ */
+
+using UnityEngine;
 using System.Collections;
 
 public class ShackPhoneDetect : MonoBehaviour {
@@ -17,6 +24,7 @@ public class ShackPhoneDetect : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
+        //initialized the phone
         lowPassFilterFactor = accelerometerUpdateInterval / lowPassKernelWidthInSeconds;
         lowPassValue = Input.acceleration;
     }
@@ -24,6 +32,7 @@ public class ShackPhoneDetect : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
+        //shake detection.
         acceleration = Input.acceleration;
         lowPassValue = Vector3.Lerp(lowPassValue, acceleration, lowPassFilterFactor);
         deltaAcceleration = acceleration - lowPassValue;
