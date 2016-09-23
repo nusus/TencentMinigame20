@@ -42,7 +42,7 @@ public class TouchManager : MonoBehaviour
                 && touchPos2.y < Input.GetTouch(1).position.y
                 && touchPos3.y < Input.GetTouch(2).position.y)
             {
-                //Todo: 播放盖被动作
+                //Todo: play animations.
 
             }
         }
