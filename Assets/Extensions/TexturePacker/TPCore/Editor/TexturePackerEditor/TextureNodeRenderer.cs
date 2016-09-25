@@ -35,10 +35,7 @@ public class TextureNodeRenderer  {
 
 		itemPos.x = itemsSpace / 2f + (index) * (itemsSpace + box_size);
 
-
-
-
-
+        
 
 		GUILayout.BeginArea (new Rect (itemPos.x, itemPos.y  , box_size, box_size * 2f), ""); {
 

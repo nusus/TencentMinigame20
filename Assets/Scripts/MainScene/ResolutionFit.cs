@@ -1,6 +1,7 @@
 ﻿/*
  Resolution fit 
  let all cameras fit 1920 x 1080 if possible
+ Won't effect UI.
  written by hearstzhang @ 2016.9.8
  */
 
