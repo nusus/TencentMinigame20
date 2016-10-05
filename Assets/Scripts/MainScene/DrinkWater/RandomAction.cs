@@ -9,11 +9,11 @@ using System.Collections;
 public class RandomAction : MonoBehaviour
 {
     [Header("间隔时间")]
-    [Tooltip("用于标记两次动作间隔的大致时间")]
+    [Tooltip("用于标记两次动作间隔的大致时间，单位为秒")]
     public float timeBetween;
 
     [Header("间隔时间变化范围")]
-    [Tooltip("用于在一定范围内改变间隔时间，使得间隔时间有更多的随机性，大小请不要超过间隔时间")]
+    [Tooltip("用于在一定范围内改变间隔时间，使得间隔时间有更多的随机性，大小请不要超过间隔时间，单位为秒")]
     public float randomTimeAddOrMinus;
 
     [Header("动作控制器")]
@@ -23,10 +23,14 @@ public class RandomAction : MonoBehaviour
     public Animator IdleRandomControll;
 
     [Header("宠物状态")]
-    [Tooltip("1表示宠物处于闲置状态，0表示宠物处于其他状态。闲置状态的时候会进行自动的走动、闲逛等动作")]
+    [Tooltip("1表示宠物处于闲置状态，2处于睡觉状态，0表示宠物处于其他状态。闲置状态的时候会进行自动的走动、闲逛等动作")]
     //Using this if only this script controlls the animator. Otherwise remain this as comment.
     //[HideInInspector]
     public int isIdle;
+
+    [Header("超时时间")]
+    [Tooltip("设备处于空闲状态（没有触摸）超过这个时间，宠物会睡觉，单位为秒")]
+    public float idleEclapseTime;
 
     //Needless to know, private variables, for performance or other perpose
 
@@ -43,18 +47,24 @@ public class RandomAction : MonoBehaviour
         Sitdown,
         Standup,
         Ball2Human,
-        Human2Ball
+        Human2Ball,
+        Sleep,
+        Wakeup
     }
     //Used to define action.
     private int actionControll;
 
-    //Last action.
+    //Last action. use this to prevent playing repeatly action.
     private int lastAction;
 
     //Temp time range. Set this for debug purpose. needless to know.
     private float tempTimeRange;
 
-
+    //this variable is used to calculate idle time. if more than time setting
+    //by designer, the pet will go asleep.
+    private int eclapseTimeFixedUpdateCount;
+    
+    
     // Use this for initialization
     void Start()
     {
@@ -64,21 +74,43 @@ public class RandomAction : MonoBehaviour
         nextAction = 0.0f;
         IdleRandomControll = this.GetComponent<Animator>();
         tempTimeRange = 0.0f;
+        eclapseTimeFixedUpdateCount = 0;
+    }
+
+    // 
+    void FixedUpdate()
+    {
+        if(Time.fixedDeltaTime * eclapseTimeFixedUpdateCount >= idleEclapseTime)
+        {
+            isIdle = 2;
+            //Todo: pet goto sleep.
+            IdleRandomControll.SetInteger("Num", (int)actions.Sleep);
+        }
+        else
+        {
+            eclapseTimeFixedUpdateCount++;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (isIdle != 0)
+        //Currently the pet is idle.
+        if (isIdle == 1)
         {
             //Init as idle if possible.
-            if(nextAction == 0.0f)
+            if (nextAction == 0.0f)
+            {
+                //calculate next action time.
                 nextAction = Time.time + Random.Range(-randomTimeAddOrMinus, randomTimeAddOrMinus) + timeBetween;
+            }
             if (Time.time > nextAction)
             {
                 tempTimeRange = Random.Range(-randomTimeAddOrMinus, randomTimeAddOrMinus);
                 nextAction = Time.time + tempTimeRange + timeBetween;
                 //Debug.Log(tempTimeRange);
+
+                //make sure don't play one action repeatly.
                 if (actionControll == 0)
                 {
                     do
@@ -87,7 +119,6 @@ public class RandomAction : MonoBehaviour
                     }
                     while (lastAction == actionControll);
                     lastAction = actionControll;
-
                 }
             }
             else
@@ -98,6 +129,11 @@ public class RandomAction : MonoBehaviour
                 }
             }
             IdleRandomControll.SetInteger("Num", actionControll);
+        }
+        if(Input.touchCount > 0)
+        {
+            //clear idle state when sence touch.
+            eclapseTimeFixedUpdateCount = 0;
         }
     }
 }
