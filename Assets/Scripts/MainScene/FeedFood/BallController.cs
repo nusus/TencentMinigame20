@@ -14,13 +14,33 @@ public class BallController : MonoBehaviour
     private LineRenderer m_LineRight;
 
     private Sprite m_FoodSprite;
-
+    /// <summary>
+    /// 弹弓的状态
+    /// </summary>
     private SlingshotState m_SlingshotState;
 
-    public Vector2 m_BallMovingAreaLeftBottom;
-    public Vector2 m_BallMovingAreaRightTop;
+    /// <summary>
+    /// 限制弹弓的移动区域
+    /// </summary>
+    public float m_BallMovingClampAngle;
+    public float m_BallMovingClampRadius;
 
+    /// <summary>
+    /// 弹弓所在的平面和饭团所在的平面的夹角
+    /// </summary>
+    public float m_PlanesAngle;
+    /// <summary>
+    /// 弹弓所在的平面和饭团所在的平面的夹角的Sin和Cos值
+    /// </summary>
+    private float m_CosPlanesAngle;
+    private float m_SinPlanesAngle;
+    /// <summary>
+    /// 移动的灵敏度
+    /// </summary>
     public float m_MovingSensitivity;
+    /// <summary>
+    /// 弹弓的弹力系数
+    /// </summary>
     public float m_SlingFactor;
 
     void Start()
@@ -36,6 +56,9 @@ public class BallController : MonoBehaviour
         m_BallOrigLocalPosition = transform.localPosition;
 
         m_SlingshotState = SlingshotState.Idle;
+
+        m_CosPlanesAngle = Mathf.Cos(Mathf.Deg2Rad * m_PlanesAngle);
+        m_SinPlanesAngle = Mathf.Sin(Mathf.Rad2Deg * m_PlanesAngle);
 
         ChangeRopePosition();
 
@@ -55,11 +78,28 @@ public class BallController : MonoBehaviour
 
         if (Input.touches[0].phase == TouchPhase.Began)
         {
+            //print("touching position" + Input.touches[0].position);
+            //if (m_SlingshotState == SlingshotState.Idle)
+            //{
+            //    Vector2 touchingPos = new Vector2(Input.touches[0].position.x, Input.touches[0].position.y);
+            //    touchingPos = Camera.main.ScreenToWorldPoint(touchingPos);
+            //    //print("touching position:" + touchingPos.ToString());
+
+            //    if (IsTouchingBall(touchingPos))
+            //    {
+            //        print("touching ball");
+            //        m_SlingshotState = SlingshotState.Ready;
+
+            //    }
+            //}
+
+            //version 1
             if (m_SlingshotState == SlingshotState.Idle)
             {
                 Vector2 touchingPos = new Vector2(Input.touches[0].position.x, Input.touches[0].position.y);
-                touchingPos = Camera.main.ScreenToWorldPoint(touchingPos);
-                print("touching position:" + touchingPos.ToString());
+                //touchingPos = Camera.main.ScreenToWorldPoint(touchingPos);
+                //print("touching position:" + touchingPos.ToString());
+
                 if (IsTouchingBall(touchingPos))
                 {
                     print("touching ball");
@@ -83,21 +123,56 @@ public class BallController : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButtonUp(0))
+        if (Input.touches[0].phase == TouchPhase.Ended)
         {
             if (m_SlingshotState == SlingshotState.Ready)
             {
                 ShotBall();
-                //RopeRevert();
+                RopeRevert();
             }
         }
     }
 
     protected void ChangeBallPosition()
     {
-        Vector2 newBallPos = new Vector2(transform.localPosition.x, transform.localPosition.y);
-        newBallPos += Input.touches[0].deltaPosition / m_FoodSprite.pixelsPerUnit * m_MovingSensitivity;
-        transform.localPosition = ClampTouchingPosition(newBallPos);
+        Vector3 newBallPos = transform.localPosition;
+        //newBallPos += Input.touches[0].deltaPosition / m_FoodSprite.pixelsPerUnit * m_MovingSensitivity;
+        Vector3 deltaPosition = Input.touches[0].deltaPosition / m_FoodSprite.pixelsPerUnit * m_MovingSensitivity;
+        print(deltaPosition);
+        newBallPos.x += deltaPosition.x;
+        newBallPos.y += deltaPosition.y;
+        if (newBallPos.y > m_BallOrigLocalPosition.y)
+        {
+            newBallPos.y = m_BallOrigLocalPosition.y;
+        }
+        newBallPos.z -= deltaPosition.y / m_CosPlanesAngle * m_SinPlanesAngle;
+
+        if (newBallPos.z >= -0.1f)
+        {
+            newBallPos.z = -0.1f;
+        }
+        ////clamp ball position
+        //Vector2 ballPosVec2 = new Vector2(newBallPos.x, newBallPos.y);
+        //Vector2 oriBallPosVce2 = new Vector2(m_BallOrigLocalPosition.x, m_BallOrigLocalPosition.y);
+        //Vector2 deltaVec2 = ballPosVec2 - oriBallPosVce2;
+        //deltaVec2.y /= m_CosPlanesAngle;
+        //if (deltaVec2.sqrMagnitude > m_BallMovingClampRadius)
+        //{
+        //    deltaVec2.Normalize();
+        //    deltaVec2 *= m_BallMovingClampRadius;
+        //}
+        //float angle = Vector2.Angle(deltaVec2, Vector2.down);
+        //if (angle >= m_BallMovingClampAngle) angle = m_BallMovingClampAngle;
+        //angle *= Mathf.Deg2Rad;
+        //deltaVec2.x = Mathf.Sign(deltaVec2.x) * Mathf.Sin(angle) * deltaVec2.sqrMagnitude;
+        //deltaVec2.y = -Mathf.Cos(angle) * deltaVec2.sqrMagnitude;
+        //Vector3 ret = new Vector3();
+        //ret.x = deltaVec2.x;
+        //ret.z = deltaVec2.y * m_SinPlanesAngle;
+        //ret.y *= m_CosPlanesAngle;
+
+        //transform.localPosition = m_BallOrigLocalPosition + ret;
+        transform.localPosition = newBallPos;
     }
 
     protected void ChangeRopePosition()
@@ -118,8 +193,8 @@ public class BallController : MonoBehaviour
 
     protected void RopeRevert()
     {
-        Vector3 leftPos = transform.localPosition - m_LineLeft.transform.localPosition;
-        Vector3 rightPos = transform.localPosition - m_LineRight.transform.localPosition;
+        Vector3 leftPos = m_BallOrigLocalPosition - m_LineLeft.transform.localPosition;
+        Vector3 rightPos = m_BallOrigLocalPosition - m_LineRight.transform.localPosition;
         ChangeRopePosition(leftPos, rightPos);
         m_SlingshotState = SlingshotState.Idle;
     }
@@ -140,6 +215,8 @@ public class BallController : MonoBehaviour
 
     protected bool IsTouchingBall(Vector2 touchingPosition)
     {
+        /*
+         * version 1
         bool ret = false;
         float pixelsPerUnit = m_FoodSprite.pixelsPerUnit;
         Vector2 leftBottom = new Vector2(
@@ -151,7 +228,7 @@ public class BallController : MonoBehaviour
             transform.position.y + m_FoodSprite.rect.height * transform.lossyScale.y / 2 / pixelsPerUnit
             );
 
-        if(touchingPosition.x >= leftBottom.x 
+        if (touchingPosition.x >= leftBottom.x
             && touchingPosition.x <= rightTop.x
             && touchingPosition.y >= leftBottom.y
             && touchingPosition.y <= rightTop.y)
@@ -159,14 +236,19 @@ public class BallController : MonoBehaviour
             ret = true;
         }
         return ret;
-    }
+        */
 
-    Vector3 ClampTouchingPosition(Vector2  touchingPosition)
-    {
-        Vector3 ret = new Vector3(touchingPosition.x, touchingPosition.y, 0);
-        ret.x = Mathf.Clamp(touchingPosition.x, m_BallMovingAreaLeftBottom.x, m_BallMovingAreaRightTop.x);
-        ret.y = Mathf.Clamp(touchingPosition.y, m_BallMovingAreaLeftBottom.y, m_BallMovingAreaRightTop.y);
-        ret.z = m_BallOrigLocalPosition.z - Mathf.Sqrt( Mathf.Pow(ret.x - m_BallOrigLocalPosition.x, 2) + Mathf.Pow(ret.y - m_BallOrigLocalPosition.y, 2) ) / 2;
+        //version 2
+        bool ret = false;
+        RaycastHit hit;
+        Ray  ray= Camera.main.ScreenPointToRay(touchingPosition);
+        if (Physics.Raycast(ray, out hit))
+        {
+            if (hit.transform.name.Equals("food"))
+            {
+                ret = true;
+            }
+        } 
         return ret;
     }
 

@@ -3,12 +3,15 @@ using System.Collections;
 
 public class FeedFoodGD : MonoBehaviour {
 
-    private BallController m_BallController;
+    public BallController2D m_BallController;
+
+    void Awake()
+    {
+        Screen.orientation = ScreenOrientation.Landscape;
+    }
 	// Use this for initialization
 	void Start () {
-        m_BallController = GameObject.Find("slingshot").transform.FindChild("food").
-            transform.GetComponent<BallController>();
-
+        
     }
 	
 	// Update is called once per frame
