@@ -26,6 +26,17 @@ public class weishuijieguoPanelCtrl : MonoBehaviour {
     {
         this.gameObject.SetActive(false);
         waterPanel.SetActive(true);
+        System.IO.FileStream fs = new System.IO.FileStream("d:\\text.txt", System.IO.FileMode.Create);
+        System.IO.StreamWriter sw = new System.IO.StreamWriter(fs);
+        //开始写入
+        sw.Write("Hello World!!!!");
+        //清空缓冲区
+        sw.Flush();
+        //关闭流
+        sw.Close();
+        fs.Close();
+
+        UnityEngine.SceneManagement.SceneManager.LoadScene("DrinkWater");
     }
 
     private void OnNoBtnClick(GameObject go)
