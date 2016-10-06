@@ -30,16 +30,20 @@ public class ShackPhoneDetect : MonoBehaviour {
         lowPassValue = Input.acceleration;
     }
 
-    // Update is called once per frame
-    void Update()
+    public bool phoneShakeDetect()
     {
+
         //shake detection
         acceleration = Input.acceleration;
         lowPassValue = Vector3.Lerp(lowPassValue, acceleration, lowPassFilterFactor);
         deltaAcceleration = acceleration - lowPassValue;
-        if(deltaAcceleration.sqrMagnitude >= shakeDetectionThreshold)
+        if (deltaAcceleration.sqrMagnitude >= shakeDetectionThreshold)
         {
-            Debug.Log("Shake event detected at time " + Time.time);
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }

@@ -1,13 +1,20 @@
 ﻿/*
  RandomAction.cs
+ Using to calculate sleep time and let the pet do random actions
+ include shake phone detect. but the number and threshold should be polished.
  control pet action when pet is idle.
  created by hearstzhang at 2016.9.7
  */
+
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
+
 
 public class RandomAction : MonoBehaviour
 {
+    public Text guiText;
+
     [Header("间隔时间")]
     [Tooltip("用于标记两次动作间隔的大致时间，单位为秒")]
     public float timeBetween;
@@ -23,7 +30,7 @@ public class RandomAction : MonoBehaviour
     public Animator IdleRandomControll;
 
     [Header("宠物状态")]
-    [Tooltip("1表示宠物处于闲置状态，2处于睡觉状态，0表示宠物处于其他状态。闲置状态的时候会进行自动的走动、闲逛等动作")]
+    [Tooltip("1表示宠物处于闲置状态，2处于睡觉状态，其他值表示宠物处于其他状态。闲置状态的时候会进行自动的走动、闲逛等动作")]
     //Using this if only this script controlls the animator. Otherwise remain this as comment.
     //[HideInInspector]
     public int isIdle;
@@ -62,9 +69,20 @@ public class RandomAction : MonoBehaviour
 
     //this variable is used to calculate idle time. if more than time setting
     //by designer, the pet will go asleep.
-    private int eclapseTimeFixedUpdateCount;
-    
-    
+    private float eclapseTimeCount;
+
+    //shake phone detect variable storage area
+    // basic parameters.
+    private float accelerometerUpdateInterval;
+    private float lowPassKernelWidthInSeconds;
+    private float shakeDetectionThreshold;
+
+    //for performance consideration.
+    private float lowPassFilterFactor = 0f;
+    private Vector3 lowPassValue = Vector3.zero;
+    private Vector3 acceleration = Vector3.zero;
+    private Vector3 deltaAcceleration = Vector3.zero;
+
     // Use this for initialization
     void Start()
     {
@@ -74,66 +92,117 @@ public class RandomAction : MonoBehaviour
         nextAction = 0.0f;
         IdleRandomControll = this.GetComponent<Animator>();
         tempTimeRange = 0.0f;
-        eclapseTimeFixedUpdateCount = 0;
-    }
+        eclapseTimeCount = 0;
 
-    // 
-    void FixedUpdate()
-    {
-        if(Time.fixedDeltaTime * eclapseTimeFixedUpdateCount >= idleEclapseTime)
-        {
-            isIdle = 2;
-            //Todo: pet goto sleep.
-            IdleRandomControll.SetInteger("Num", (int)actions.Sleep);
-        }
-        else
-        {
-            eclapseTimeFixedUpdateCount++;
-        }
+
+        //shake phone detect initialize
+        //initialized the phone.
+        accelerometerUpdateInterval = 1.0f / 60.0f;
+        lowPassKernelWidthInSeconds = 1.0f;
+        shakeDetectionThreshold = 2.0f;
+        lowPassFilterFactor = accelerometerUpdateInterval / lowPassKernelWidthInSeconds;
+        lowPassValue = Input.acceleration;
     }
 
     // Update is called once per frame
     void Update()
     {
-        //Currently the pet is idle.
-        if (isIdle == 1)
+        guiText.text = deltaAcceleration.sqrMagnitude.ToString() + " " + actionControll + " " + isIdle.ToString();
+        switch (isIdle)
         {
-            //Init as idle if possible.
-            if (nextAction == 0.0f)
-            {
-                //calculate next action time.
-                nextAction = Time.time + Random.Range(-randomTimeAddOrMinus, randomTimeAddOrMinus) + timeBetween;
-            }
-            if (Time.time > nextAction)
-            {
-                tempTimeRange = Random.Range(-randomTimeAddOrMinus, randomTimeAddOrMinus);
-                nextAction = Time.time + tempTimeRange + timeBetween;
-                //Debug.Log(tempTimeRange);
 
-                //make sure don't play one action repeatly.
-                if (actionControll == 0)
+            //Currently the pet is idle.
+            case 1:
                 {
-                    do
+                    //give the pet time to wake up.
+                    //temporary use eclapseTimeCount now.
+                    if (lastAction == 9)
                     {
-                        actionControll = Random.Range((int)actions.Thirsty, (int)actions.Human2Ball);
+                        eclapseTimeCount += Time.deltaTime;
+                        if (eclapseTimeCount < 2.0f)
+                            break;
+                        else
+                            //clear the sleep state when detect wakeup.
+                            eclapseTimeCount = 0f;
                     }
-                    while (lastAction == actionControll);
-                    lastAction = actionControll;
+                    if (eclapseTimeCount >= idleEclapseTime)
+                    {
+                        isIdle = 2;
+                        //pet goto sleep.
+                        IdleRandomControll.SetInteger("Num", (int)actions.Sleep);
+                        actionControll = lastAction = (int)actions.Sleep;
+                        //clear eclapseTimeFixedUpdateCount after go to sleep.
+                        eclapseTimeCount = 0;
+
+                        //stop switch action.
+                        break;
+                    }
+
+                    //Init as idle if possible.
+                    if (nextAction < 0.001f)
+                    {
+                        //calculate next action time.
+                        nextAction = Time.time + Random.Range(-randomTimeAddOrMinus, randomTimeAddOrMinus) + timeBetween;
+                    }
+                    if (Time.time > nextAction)
+                    {
+                        tempTimeRange = Random.Range(-randomTimeAddOrMinus, randomTimeAddOrMinus);
+                        nextAction = Time.time + tempTimeRange + timeBetween;
+
+                        //make sure don't play one action repeatly.
+                        if (actionControll == 0)
+                        {
+                            do
+                            {
+                                actionControll = Random.Range((int)actions.Thirsty, (int)actions.Human2Ball);
+                            }
+                            while (lastAction == actionControll);
+                            lastAction = actionControll;
+                        }
+                    }
+                    else
+                    {
+                        if (actionControll != 0)
+                        {
+                            actionControll = 0;
+                        }
+                    }
+                    IdleRandomControll.SetInteger("Num", actionControll);
+
+                    if (Input.touchCount > 0)
+                    {
+                        //clear idle state when sense touch.
+                        eclapseTimeCount = 0;
+                    }
+                    eclapseTimeCount += Time.deltaTime;
+                    break;
                 }
-            }
-            else
-            {
-                if (actionControll != 0)
+
+
+            //when sleep, the shake phone detect is enabled
+            case 2:
                 {
-                    actionControll = 0;
+                    //shake detection
+                    acceleration = Input.acceleration;
+                    lowPassValue = Vector3.Lerp(lowPassValue, acceleration, lowPassFilterFactor);
+                    deltaAcceleration = acceleration - lowPassValue;
+
+                    //the phone is shaking or player touch the phone.
+                    if (deltaAcceleration.sqrMagnitude >= shakeDetectionThreshold || Input.touchCount > 0 || Input.GetMouseButtonDown(0))
+                    {
+                        //shake phone or touch detected.
+                        //the pet should wake up.
+                        IdleRandomControll.SetInteger("Num", (int)actions.Wakeup);
+                        actionControll = lastAction = (int)actions.Wakeup;
+                        //force make next action to zero.
+                        nextAction = 0.0f;
+                        isIdle = 1;
+                    }
+                    break;
                 }
-            }
-            IdleRandomControll.SetInteger("Num", actionControll);
+            default:
+                break;
         }
-        if(Input.touchCount > 0)
-        {
-            //clear idle state when sence touch.
-            eclapseTimeFixedUpdateCount = 0;
-        }
+
     }
 }

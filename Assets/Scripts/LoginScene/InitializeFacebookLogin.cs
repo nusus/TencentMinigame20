@@ -85,8 +85,8 @@ public class InitializeFacebookLogin : MonoBehaviour
         {
             Debug.Log("Success");
             var aToken = AccessToken.CurrentAccessToken;
-            Debug.Log(aToken.UserId);
-            text.text = aToken.UserId.ToString();
+            Debug.Log(aToken.TokenString);
+            text.text = aToken.TokenString;
             foreach (string perm in aToken.Permissions)
             {
                 Debug.Log(perm);
