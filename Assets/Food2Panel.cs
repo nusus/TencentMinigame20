@@ -4,7 +4,7 @@ using System.Collections;
 using System;
 
 public class Food2Panel : MonoBehaviour {
-    public GameObject foodPanel = null;
+    public GameObject toushipanel = null;
     public Button yesfoodButton = null;
     public Button nofoodButton = null;
     public Button closeButton = null;
@@ -25,8 +25,9 @@ public class Food2Panel : MonoBehaviour {
 
     private void OnYesBtnClick(GameObject go)
     {
-        this.gameObject.SetActive(true);
-        UnityEngine.SceneManagement.SceneManager.LoadScene("FeedFood");
+        this.gameObject.SetActive(false);
+        toushipanel.SetActive(true);
+        UnityEngine.SceneManagement.SceneManager.LoadScene("DrinkWater");
     }
 
     private void OnNoBtnClick(GameObject go)
