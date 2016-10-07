@@ -2,12 +2,12 @@
 using System.Collections;
 
 public class GyroscopeInfo : MonoBehaviour {
-    public float m_XDeltaSkewAngle;
-    public float m_YDeltaSkewAngle;
-    public float m_ZDeltaSkewAngle;
+    public float m_XDeltaSkewAngle = 0;
+    public float m_YDeltaSkewAngle = 0;
+    public float m_ZDeltaSkewAngle = 10;
 
     private int m_FramesToUpdateRotateAngle;
-    public int m_FixedFramesToUpdateRotateAngle;
+    public int m_FixedFramesToUpdateRotateAngle = 6;
 
     private RotateResult m_PhoneRotateResult;
     private Vector3 m_NewGravity;
@@ -22,12 +22,12 @@ public class GyroscopeInfo : MonoBehaviour {
 
     private float m_DeltaAngle;
 
-    public float m_FixedAngleSpeed;
+    public float m_FixedAngleSpeed = 2;
     /// <summary>
     /// FOR DEBUG
     /// </summary>
     /// 
-    public bool m_IsDebug;
+    public bool m_IsDebug = true;
 	// Use this for initialization
 	void Start () {
         //version 1

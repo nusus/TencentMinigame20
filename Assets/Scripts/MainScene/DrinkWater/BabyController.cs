@@ -6,11 +6,14 @@ public class BabyController : CircleMoveController {
     public int m_FixedDrinkWaterFrames;
     private bool m_IsAnimationPlaying;
 
-    private Animator m_BabyActionAnimator; 
+    private Animator m_BabyActionAnimator;
+
+    private DrinkWaterGD m_GameDirector;
     new public void Start()
     {
         base.Start();
         m_BabyActionAnimator = this.GetComponent<Animator>();
+        m_GameDirector = GameObject.Find("GameDirector").GetComponent<DrinkWaterGD>();
 
         m_DrinkWaterFrames = 0;
         m_IsAnimationPlaying = false;
@@ -20,16 +23,7 @@ public class BabyController : CircleMoveController {
     protected override void RotateSelf()
     {
         base.RotateSelf();
-        RotateBaby();
-
-        //m_DrinkWaterFrames--;
-        //if (m_DrinkWaterFrames < 0)
-        //    if (m_IsAnimationPlaying)
-        //    {
-        //        m_BabyActionAnimator.SetBool("isDrinkWater", false);
-        //        m_IsAnimationPlaying = false;
-        //    }
-       
+        RotateBaby();     
     }
 
     protected void RotateBaby()
@@ -39,12 +33,7 @@ public class BabyController : CircleMoveController {
 
     public void OnParticleCollision(GameObject other)
     {
-        //print("collition with particles");
-
-        //m_DrinkWaterFrames = m_FixedDrinkWaterFrames;
-        //if (!m_IsAnimationPlaying)
-        //    m_BabyActionAnimator.SetBool("isDrinkWater", true);
-
+        m_GameDirector.IncreaseDrinkWaterSeconds(Time.fixedDeltaTime);
 
     }
 
