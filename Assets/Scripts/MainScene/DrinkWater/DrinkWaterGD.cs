@@ -20,6 +20,9 @@ public class DrinkWaterGD : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         m_CountDownTimeSecondsRoRender -= Time.deltaTime;
+        if (m_CountDownTimeSecondsRoRender <= 0.0f) {
+            OnTimeOut();
+        }
 	
 	}
 
@@ -43,7 +46,7 @@ public class DrinkWaterGD : MonoBehaviour {
         m_DrinkWaterResultPanel.SetActive(true);
 
         UnityEngine.UI.Text drinkWaterSecondsResultText = GameObject.Find("drinkWaterSecondsResultText").GetComponent<UnityEngine.UI.Text>();
-        drinkWaterSecondsResultText.text = "喝水时间：" + drinkWater.ToString();
+        drinkWaterSecondsResultText.text = "喝水量：" + drinkWater.ToString();
         
         UnityEngine.UI.Text drinkTimeText = GameObject.Find("drinkTimeText").GetComponent<UnityEngine.UI.Text>();
         drinkTimeText.text = "总耗时：" + totalTime.ToString();
