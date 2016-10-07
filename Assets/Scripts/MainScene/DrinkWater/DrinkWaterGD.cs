@@ -10,12 +10,15 @@ public class DrinkWaterGD : MonoBehaviour {
     //喝到水的总时间
     private float m_DrinkWaterSeconds = 0;
 
+    private DrinkWaterUIManager m_DrinkWaterUIManager;
+
     public GameObject m_DrinkWaterResultPanel;
 	// Use this for initialization
 	void Start () {
         m_CountDownTimeSecondsRoRender = m_CountDownSeconds;
-	
-	}
+        m_DrinkWaterUIManager = GameObject.Find("LobbyUI").GetComponent<DrinkWaterUIManager>();
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -23,6 +26,9 @@ public class DrinkWaterGD : MonoBehaviour {
         if (m_CountDownTimeSecondsRoRender <= 0.0f) {
             OnTimeOut();
         }
+
+        m_DrinkWaterUIManager.ChangeCountDownSeconds((int)(m_CountDownTimeSecondsRoRender));
+        m_DrinkWaterUIManager.ChangeDrinkWaterSeconds((int)m_DrinkWaterSeconds);
 	
 	}
 
