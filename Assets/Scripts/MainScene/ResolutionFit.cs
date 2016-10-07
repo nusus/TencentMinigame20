@@ -16,7 +16,7 @@ public class ResolutionFit : MonoBehaviour
     {
         foreach(Camera camera in Camera.allCameras)
         {
-            camera.aspect = 1920 / 1080f;
+            camera.aspect = 1080 / 1920f;
         }
     }
 
