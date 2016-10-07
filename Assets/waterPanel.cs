@@ -26,7 +26,10 @@ public class waterPanel : MonoBehaviour {
 		this.gameObject.SetActive(false);
 		weishuiPanel.SetActive(true);
 		weishuiPanelCtrl weishuiCtrl = weishuiPanel.GetComponent<weishuiPanelCtrl>();
-		if (weishuiCtrl != null)
+
+        UnityEngine.SceneManagement.SceneManager.LoadScene("DrinkWater");
+
+        if (weishuiCtrl != null)
 		{
 			weishuiCtrl.StartTick();
 		}
