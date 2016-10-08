@@ -2,9 +2,10 @@
 using System.Collections;
 
 public class MainUIGD : MonoBehaviour {
-
+    public MainUIManager m_MainUIManager;
 	// Use this for initialization
 	void Start () {
+        GameDatabase.GetInstance();
 	
 	}
 	
@@ -12,4 +13,26 @@ public class MainUIGD : MonoBehaviour {
 	void Update () {
 	
 	}
+
+    public void PurchaseWater()
+    {
+        DrinkWater();
+    }
+
+    public void DrinkWater()
+    {
+        UnityEngine.SceneManagement.SceneManager.UnloadScene("mainui");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("DrinkWater");
+    }
+
+    public void PurchaseFood()
+    {
+        FeedFood();
+    }
+
+    public void FeedFood()
+    {
+        UnityEngine.SceneManagement.SceneManager.UnloadScene("mainui");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("FeedFood");
+    }
 }
