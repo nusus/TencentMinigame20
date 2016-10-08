@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class toushitime : MonoBehaviour {
+public class MainUIGD : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
@@ -12,6 +12,4 @@ public class toushitime : MonoBehaviour {
 	void Update () {
 	
 	}
-
-
 }
