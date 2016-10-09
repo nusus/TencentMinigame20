@@ -22,6 +22,8 @@ public class FeedFoodGD : MonoBehaviour {
         m_HitTimes = 0;
         m_FeedFoodUIManager.ChangeHitTimes(m_HitTimes);
         m_FeedFoodUIManager.ChangeLeftTimes(m_LeftTimes);
+
+        Screen.orientation = ScreenOrientation.Landscape;
     }
 	
 	// Update is called once per frame

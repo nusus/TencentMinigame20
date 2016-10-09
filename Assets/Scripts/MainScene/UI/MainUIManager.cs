@@ -7,6 +7,7 @@ public class MainUIManager : MonoBehaviour {
     public GameObject m_ShuXingPanel;
     public GameObject m_FoodPanel;
     public GameObject m_WaterPanel;
+    public GameObject m_UpdatePanel;
 
     public UnityEngine.UI.Slider m_ExpSlider;
 
@@ -22,16 +23,23 @@ public class MainUIManager : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        
+        OnShow();
+	
+	}
+
+    public void OnShow()
+    {
         GameDatabase db = GameDatabase.GetInstance();
         OnLevelChanged(db.level);
         OnExperienceValueChanged(db.experience);
         OnHealthChanged(db.health);
         OnCoinChanged(db.money);
-	
-	}
+    }
 	
 	// Update is called once per frame
 	void Update () {
+        OnShow();
 	
 	}
 
@@ -75,8 +83,25 @@ public class MainUIManager : MonoBehaviour {
         this.ChangeNumberSprite(m_CoinNumUnitSprite, unit);
     }
 
+    public void OnUpgrade()
+    {
+        m_UpdatePanel.SetActive(true);
+        UnityEngine.UI.Text updateText = GameObject.Find("updateText").GetComponent<UnityEngine.UI.Text>();
+        updateText.text = "恭喜升级到：" + GameDatabase.GetInstance().level;
+    }
+
+    public void OnUpgradeConfirm()
+    {
+        if (GameDatabase.GetInstance().level % 10 == 0)
+        {
+            GameDatabase.GetInstance().drama = GameDatabase.GetInstance().level / 10 + 1;
+            UnityEngine.SceneManagement.SceneManager.LoadScene("Chapter0");
+        }
+    }
+
     private void ChangeNumberSprite(UnityEngine.UI.Image image, int number)
     {
+        if (number > 9) number = 9;
         image.sprite = m_NumImages[number];
     }
 }

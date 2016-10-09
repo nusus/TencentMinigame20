@@ -31,4 +31,8 @@ public class MainUIBaby : MonoBehaviour {
         GetComponent<RandomAction>().isIdle = 0;
     }
 
+    public void ExitException()
+    {
+    }
+
 }

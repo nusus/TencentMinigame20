@@ -70,8 +70,17 @@ public class MainUIGD : MonoBehaviour {
         if (m_TimeTick > 1.0f) {
             OnSecond();
             m_TimeTick = 0.0f;
+        }
+        if (db.experience > db.level * 100) {
+            onUpgrade();
         }	
 	}
+
+    public void onUpgrade()
+    {
+        db.level += 1;
+        m_MainUIManager.OnUpgrade();
+    }
 
     public void OnSecond()
     {
@@ -92,11 +101,29 @@ public class MainUIGD : MonoBehaviour {
         {
             m_Baby.OnEnergyLowerStandard();
         }
+
+        db.time += 1;
+
+        db.money += m_CoinIncreasingSpeed;
+
+        db.health = (int)((db.psychology * db.hunger * db.thirst * db.energy) * 0.25);
+
+    }
+
+    public void OnExitException()
+    {
+        m_Baby.ExitException();
     }
 
     public void PurchaseWater()
     {
         DrinkWater();
+    }
+
+    public void OnBabyShakedaWake()
+    {
+        db.energy += m_EnergyLosingSpeed * 10;
+        OnExitException();
     }
 
     public void DrinkWater()

@@ -18,11 +18,11 @@ public class DrinkWaterUIManager : MonoBehaviour {
 
     public void ChangeCountDownSeconds(int value)
     {
-        m_CountDownSecondsText.text = value.ToString();
+        m_CountDownSecondsText.text = "剩余时间：" + value.ToString();
     }
 
     public void ChangeDrinkWaterSeconds(int value)
     {
-        m_DrinkWaterSecondsText.text = value.ToString();
+        m_DrinkWaterSecondsText.text ="喝水量：" + value.ToString();
     }
 }

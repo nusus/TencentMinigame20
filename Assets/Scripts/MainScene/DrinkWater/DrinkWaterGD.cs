@@ -56,6 +56,8 @@ public class DrinkWaterGD : MonoBehaviour {
         
         UnityEngine.UI.Text drinkTimeText = GameObject.Find("drinkTimeText").GetComponent<UnityEngine.UI.Text>();
         drinkTimeText.text = "总耗时：" + totalTime.ToString();
+
+        GameDatabase.GetInstance().thirst += (int)this.GetDrinkingWaterPercent();
     }
 
     public void IncreaseDrinkWaterSeconds(float seconds)
@@ -70,5 +72,11 @@ public class DrinkWaterGD : MonoBehaviour {
 
     public float GetDrinkWaterSeconds() {
         return m_DrinkWaterSeconds;
+    }
+
+
+    public float GetDrinkingWaterPercent()
+    {
+        return m_DrinkWaterSeconds / m_CountDownSeconds * 100;
     }
 }

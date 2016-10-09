@@ -10,6 +10,9 @@ public class FeedFoodUIManager : MonoBehaviour {
     void Start () {
         m_HitTimesText = GameObject.Find("hitTimesText").GetComponent<UnityEngine.UI.Text>();
         m_LeftTimesText = GameObject.Find("leftTimesText").GetComponent<UnityEngine.UI.Text>();
+
+        ChangeHitTimes(0);
+        ChangeLeftTimes(3);
 	}
 	
 	// Update is called once per frame

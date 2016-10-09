@@ -9,13 +9,13 @@ public class GameDatabase {
     public int hunger;
     public int thirst;
     public int energy;
-    public int psychology;
-    public int health;
-    public int level;
+    public int psychology = 1;
+    public int health = 1;
+    public int level = 1;
     public string token;
     public string name;
-    public bool isFirstStart;
-    public int drama;
+    public bool isFirstStart = true;
+    public int drama = 1;
 
     private bool m_IsInit = false;
     private bool m_NeedSync = false;
