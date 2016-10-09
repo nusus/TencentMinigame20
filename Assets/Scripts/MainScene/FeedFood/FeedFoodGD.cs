@@ -11,10 +11,12 @@ public class FeedFoodGD : MonoBehaviour {
     private FeedFoodUIManager m_FeedFoodUIManager;
     void Awake()
     {
-        //Screen.orientation = ScreenOrientation.Landscape;
+        
     }
 	// Use this for initialization
 	void Start () {
+        Screen.orientation = ScreenOrientation.LandscapeLeft;
+
         m_FeedFoodUIManager = GameObject.Find("UIManager").GetComponent<FeedFoodUIManager>();
         m_LeftTimes = m_TotalTimes;
         m_HitTimes = 0;

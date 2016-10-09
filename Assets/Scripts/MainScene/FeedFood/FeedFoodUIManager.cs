@@ -2,8 +2,8 @@
 using System.Collections;
 
 public class FeedFoodUIManager : MonoBehaviour {
-    private UnityEngine.UI.Text m_HitTimesText;
-    private UnityEngine.UI.Text m_LeftTimesText;
+    public UnityEngine.UI.Text m_HitTimesText;
+    public UnityEngine.UI.Text m_LeftTimesText;
 
     public GameObject m_ResultPanel;
     // Use this for initialization

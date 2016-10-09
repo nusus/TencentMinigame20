@@ -2,7 +2,13 @@
 using System.Collections;
 
 public class MainUIGD : MonoBehaviour {
+
     public MainUIManager m_MainUIManager;
+
+    void Awake()
+    {
+        Screen.orientation = ScreenOrientation.Portrait;
+    }
 	// Use this for initialization
 	void Start () {
         GameDatabase.GetInstance();
