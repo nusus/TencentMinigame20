@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using Facebook.Unity;
+using Facebook.MiniJSON;
 
 public class InitializeFacebookLogin : MonoBehaviour
 {
@@ -14,9 +15,12 @@ public class InitializeFacebookLogin : MonoBehaviour
     [Tooltip("这个物体用于显示用户头像的")]
     public GameObject headMesh;
 
+    private GameDatabase database;
+
     void Start()
     {
         text.text = null;
+        database = GameDatabase.GetInstance();
     }
 
     //Initialize Facebook SDK here
@@ -69,11 +73,26 @@ public class InitializeFacebookLogin : MonoBehaviour
         }, HandleResult);
     }
 
-    IEnumerator<WWW> getImage(AccessToken CurToken)
+    //IEnumerator<WWW> getImage(AccessToken CurToken)
+    //{
+    //    WWW www = new WWW("https://graph.facebook.com/" + CurToken.UserId + "/picture?type=large");
+    //    yield return www;
+    //    headMesh.GetComponent<Image>().material.mainTexture = www.texture;
+    //}
+
+    private void loginName(IResult result)
     {
-        WWW www = new WWW("https://graph.facebook.com/" + CurToken.UserId + "/picture?type=large");
-        yield return www;
-        headMesh.GetComponent<Image>().material.mainTexture = www.texture;
+        if (result.Error != null)
+            Debug.Log("ERROR:" + result.Error);
+        else if (!FB.IsLoggedIn)
+            Debug.Log("User not login");
+        else
+        {
+            IDictionary<string, string> dict;
+            dict = Json.Deserialize(result.ToString()) as IDictionary<string, string>;
+            database.name = dict["name"].ToString();
+            Debug.Log(database.name);
+        }
     }
 
     protected void HandleResult(IResult result)
@@ -96,19 +115,21 @@ public class InitializeFacebookLogin : MonoBehaviour
         {
             Debug.Log("Success");
             var aToken = AccessToken.CurrentAccessToken;
-            Debug.Log(aToken.TokenString);
-            StartCoroutine(getImage(AccessToken.CurrentAccessToken));
-            text.text = aToken.TokenString;
-            foreach (string perm in aToken.Permissions)
-            {
-                Debug.Log(perm);
-            }
-            SceneManager.LoadScene("DrinkWater");
+            //Debug.Log(aToken.TokenString);
+            //StartCoroutine(getImage(AccessToken.CurrentAccessToken));
+            //text.text = aToken.TokenString;
+            database.token = aToken.ToString();
+            database.userID = aToken.UserId;
+            FB.API("/me?fields=first_name", HttpMethod.GET, loginName);
+            //foreach (string perm in aToken.Permissions)
+            //{
+            //    Debug.Log(perm);
+            //}
+            SceneManager.LoadScene("mainui", LoadSceneMode.Single);
         }
         else
         {
             Debug.Log("Empty response");
         }
     }
-
 }

@@ -160,6 +160,7 @@ public class RandomAction : MonoBehaviour
             }
             IdleRandomControll.SetInteger("Num", actionControll);
 
+
             if (Input.touchCount > 0)
             {
                 //clear idle state when sense touch.
