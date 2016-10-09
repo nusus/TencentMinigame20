@@ -10,6 +10,10 @@ public class InitializeFacebookLogin : MonoBehaviour
     [Tooltip("用于显示登陆用户ID的GUIText组件")]
     public Text text;
 
+    [Header("头像显示")]
+    [Tooltip("这个物体用于显示用户头像的")]
+    public GameObject headMesh;
+
     void Start()
     {
         text.text = null;
@@ -65,6 +69,13 @@ public class InitializeFacebookLogin : MonoBehaviour
         }, HandleResult);
     }
 
+    IEnumerator<WWW> getImage(AccessToken CurToken)
+    {
+        WWW www = new WWW("https://graph.facebook.com/" + CurToken.UserId + "/picture?type=large");
+        yield return www;
+        headMesh.GetComponent<Image>().material.mainTexture = www.texture;
+    }
+
     protected void HandleResult(IResult result)
     {
         if (result == null)
@@ -86,6 +97,7 @@ public class InitializeFacebookLogin : MonoBehaviour
             Debug.Log("Success");
             var aToken = AccessToken.CurrentAccessToken;
             Debug.Log(aToken.TokenString);
+            StartCoroutine(getImage(AccessToken.CurrentAccessToken));
             text.text = aToken.TokenString;
             foreach (string perm in aToken.Permissions)
             {
