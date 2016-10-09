@@ -39,9 +39,13 @@ public class MainUIGD : MonoBehaviour {
     [Tooltip("精力值初始值，整数")]
     public int m_EnergyDefaultValue;
 
+    [Header("金币增长的速度")]
+    [Tooltip("每秒金币增长的数字，整数")]
+    public int m_CoinIncreasingSpeed;
 
     public MainUIManager m_MainUIManager;
 
+    private float m_TimeTick = 0.0f;
     private GameDatabase db;
     private MainUIBaby m_Baby;
     void Awake() {
@@ -62,22 +66,33 @@ public class MainUIGD : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        m_TimeTick += Time.deltaTime;
+        if (m_TimeTick > 1.0f) {
+            OnSecond();
+            m_TimeTick = 0.0f;
+        }	
+	}
+
+    public void OnSecond()
+    {
         db.thirst -= m_ThirstLosingSpeed;
-        if (db.thirst < m_ThirstStandard) {
+        if (db.thirst < m_ThirstStandard)
+        {
             m_Baby.OnThirstLowerStandard();
         }
 
         db.hunger -= m_HungerLosingSpeed;
-        if (db.hunger < m_HungerStandard) {
+        if (db.hunger < m_HungerStandard)
+        {
             m_Baby.OnHungerLowerStandard();
         }
 
         db.energy -= m_EnergyLosingSpeed;
-        if (db.energy < m_EnergyStandard) {
+        if (db.energy < m_EnergyStandard)
+        {
             m_Baby.OnEnergyLowerStandard();
         }
-	
-	}
+    }
 
     public void PurchaseWater()
     {
