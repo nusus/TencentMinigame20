@@ -16,6 +16,7 @@ public class GameDatabase {
     public string name;
     public bool isFirstStart = true;
     public int drama = 1;
+    public string userID;
 
     private bool m_IsInit = false;
     private bool m_NeedSync = false;
