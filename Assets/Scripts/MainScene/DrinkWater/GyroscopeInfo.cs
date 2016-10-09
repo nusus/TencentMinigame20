@@ -231,14 +231,14 @@ public class GyroscopeInfo : MonoBehaviour {
         float ret = m_CurrentRotateAngle - m_CurrentBottleAngle > 0 ? m_FixedAngleSpeed : -m_FixedAngleSpeed;
         if (ret > 0)
         {
-            if (m_CurrentBottleAngle + m_FixedAngleSpeed > m_CurrentRotateAngle)
+            if (m_CurrentBottleAngle + ret > m_CurrentRotateAngle)
             {
                 ret = m_CurrentRotateAngle - m_CurrentBottleAngle;
             }
         }
         else
         {
-            if (m_CurrentBottleAngle + m_FixedAngleSpeed < m_CurrentRotateAngle)
+            if (m_CurrentBottleAngle + ret < m_CurrentRotateAngle)
             {
                 ret = m_CurrentRotateAngle - m_CurrentBottleAngle;
             }
