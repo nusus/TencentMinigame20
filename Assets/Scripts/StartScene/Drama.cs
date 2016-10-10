@@ -95,7 +95,10 @@ public class Drama : MonoBehaviour
                             guiText.text = "而此刻夜空中，一个神秘的影子一闪而过，化作光点在东方的夜空中消失了……";
                             break;
                         default:
-                            SceneManager.LoadScene("mainui", LoadSceneMode.Single);
+                            //SceneManager.LoadScene("mainui", LoadSceneMode.Single);
+                            dramaSceneSelect = (int)dramaScene.Chapter1;
+                            textContent = 0;
+                            dramaImage[dramaSceneSelect].SetActive(true);
                             break;
                     }
                     break;

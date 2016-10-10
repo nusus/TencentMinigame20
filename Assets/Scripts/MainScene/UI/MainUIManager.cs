@@ -8,6 +8,7 @@ public class MainUIManager : MonoBehaviour {
     public GameObject m_FoodPanel;
     public GameObject m_WaterPanel;
     public GameObject m_UpdatePanel;
+    public GameObject m_InfoPanel;
 
     public UnityEngine.UI.Slider m_ExpSlider;
 
@@ -103,5 +104,10 @@ public class MainUIManager : MonoBehaviour {
     {
         if (number > 9) number = 9;
         image.sprite = m_NumImages[number];
+    }
+
+    public void OnCoinsNotEnough()
+    {
+        m_InfoPanel.SetActive(true);
     }
 }

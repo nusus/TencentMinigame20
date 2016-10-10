@@ -58,6 +58,9 @@ public class MainUIGD : MonoBehaviour {
             db.thirst = m_ThirstDefaultValue;
             db.hunger = m_HungerDefaultValue;
             db.energy = m_HungerDefaultValue;
+            db.isFirstStart = false;
+            GameDatabase.GetInstance().drama = GameDatabase.GetInstance().level / 10 + 1;
+            UnityEngine.SceneManagement.SceneManager.LoadScene("Chapter0");        
         }
 
         m_Baby = GameObject.Find("baby").GetComponent<MainUIBaby>();
@@ -117,7 +120,14 @@ public class MainUIGD : MonoBehaviour {
 
     public void PurchaseWater()
     {
-        DrinkWater();
+        db.money -= 10;
+        if (db.money < 0)
+        {
+            db.money = 0;
+            m_MainUIManager.OnCoinsNotEnough();
+        }
+        else
+            DrinkWater();
     }
 
     public void OnBabyShakedaWake()
@@ -128,18 +138,25 @@ public class MainUIGD : MonoBehaviour {
 
     public void DrinkWater()
     {
-        UnityEngine.SceneManagement.SceneManager.UnloadScene("mainui");
+        //UnityEngine.SceneManagement.SceneManager.UnloadScene("mainui");
         UnityEngine.SceneManagement.SceneManager.LoadScene("DrinkWater");
     }
 
     public void PurchaseFood()
     {
-        FeedFood();
+        db.money -= 10;
+        if (db.money < 0)
+        {
+            db.money = 0;
+            m_MainUIManager.OnCoinsNotEnough();
+        }
+        else
+            FeedFood();
     }
 
     public void FeedFood()
     {
-        UnityEngine.SceneManagement.SceneManager.UnloadScene("mainui");
+        //UnityEngine.SceneManagement.SceneManager.UnloadScene("mainui");
         UnityEngine.SceneManagement.SceneManager.LoadScene("FeedFood");
     }
 }
