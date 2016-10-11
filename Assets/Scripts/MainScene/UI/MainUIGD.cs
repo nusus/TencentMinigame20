@@ -47,6 +47,8 @@ public class MainUIGD : MonoBehaviour {
 
     private float m_TimeTick = 0.0f;
     private GameDatabase db;
+    AudioSource asource;
+
     private MainUIBaby m_Baby;
     void Awake() {
         Screen.orientation = ScreenOrientation.Portrait;
@@ -54,16 +56,19 @@ public class MainUIGD : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         db = GameDatabase.GetInstance();
+        asource = gameObject.GetComponent<AudioSource>();
         if (db.isFirstStart) {
             db.thirst = m_ThirstDefaultValue;
             db.hunger = m_HungerDefaultValue;
             db.energy = m_HungerDefaultValue;
             db.isFirstStart = false;
             GameDatabase.GetInstance().drama = GameDatabase.GetInstance().level / 10 + 1;
-            UnityEngine.SceneManagement.SceneManager.LoadScene("Chapter0");        
+            UnityEngine.SceneManagement.SceneManager.LoadScene("Chapter0");
+            asource.Stop();        
         }
-
+        
         m_Baby = GameObject.Find("baby").GetComponent<MainUIBaby>();
+        asource.Play();
 	
 	}
 	
@@ -141,6 +146,7 @@ public class MainUIGD : MonoBehaviour {
     public void DrinkWater()
     {
         //UnityEngine.SceneManagement.SceneManager.UnloadScene("mainui");
+        asource.Stop();
         UnityEngine.SceneManagement.SceneManager.LoadScene("DrinkWater");
     }
 
@@ -160,6 +166,7 @@ public class MainUIGD : MonoBehaviour {
 
     public void FeedFood()
     {
+        asource.Stop();
         //UnityEngine.SceneManagement.SceneManager.UnloadScene("mainui");
         UnityEngine.SceneManagement.SceneManager.LoadScene("FeedFood");
     }
