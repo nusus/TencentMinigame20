@@ -33,14 +33,17 @@ public class ShuxingPanelUIM : MonoBehaviour {
         MainUIGD gameDirector = GameObject.Find("GameDirector").GetComponent<MainUIGD>();
         GameDatabase db = GameDatabase.GetInstance();
         int tmp = (gameDirector.m_HungerDefaultValue - db.hunger) / gameDirector.m_HungerDefaultValue * 100;
+        tmp = tmp > 100 ? 100 : tmp; 
         m_HungerSlider.value = tmp;
         m_HungerText.text = tmp.ToString() + "%";
 
         tmp = (gameDirector.m_ThirstDefaultValue - db.thirst) / gameDirector.m_ThirstDefaultValue * 100;
+        tmp = tmp > 100 ? 100 : tmp;
         m_ThirstSlider.value = tmp;
         m_ThirstText.text = tmp.ToString() + "%";
 
         tmp = (gameDirector.m_EnergyDefaultValue - db.energy) / gameDirector.m_EnergyDefaultValue * 100;
+        tmp = tmp > 100 ? 100 : tmp;
         m_EnergySlider.value = tmp;
         m_EnergyText.text = tmp.ToString() + "%";
 

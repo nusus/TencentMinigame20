@@ -120,14 +120,16 @@ public class MainUIGD : MonoBehaviour {
 
     public void PurchaseWater()
     {
-        db.money -= 10;
-        if (db.money < 0)
+        if (db.money < 10)
         {
-            db.money = 0;
             m_MainUIManager.OnCoinsNotEnough();
         }
         else
+        {
+            db.money -= 10;
             DrinkWater();
+        }
+            
     }
 
     public void OnBabyShakedaWake()
@@ -144,14 +146,16 @@ public class MainUIGD : MonoBehaviour {
 
     public void PurchaseFood()
     {
-        db.money -= 10;
-        if (db.money < 0)
+        if (db.money < 10)
         {
-            db.money = 0;
             m_MainUIManager.OnCoinsNotEnough();
         }
         else
+        {
+            db.money -= 10;
             FeedFood();
+        }
+            
     }
 
     public void FeedFood()

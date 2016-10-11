@@ -35,9 +35,9 @@ public class FeedFoodUIManager : MonoBehaviour {
     {
         m_ResultPanel.SetActive(true);
         UnityEngine.UI.Text hitText = GameObject.Find("hitTimesResultText").GetComponent<UnityEngine.UI.Text>();
-        hitText.text = "命中次数：" + hitTimes.ToString();
+        hitText.text = "命中次数：   " + hitTimes.ToString();
         UnityEngine.UI.Text leftText = GameObject.Find("leftTimesResultText").GetComponent<UnityEngine.UI.Text>();
-        leftText.text = "剩余次数：" + leftTimes.ToString();
+        leftText.text = "剩余次数：   " + leftTimes.ToString();
     }
 
 }

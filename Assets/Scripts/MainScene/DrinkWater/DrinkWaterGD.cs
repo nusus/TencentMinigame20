@@ -13,6 +13,8 @@ public class DrinkWaterGD : MonoBehaviour {
     private DrinkWaterUIManager m_DrinkWaterUIManager;
 
     public GameObject m_DrinkWaterResultPanel;
+
+    private bool m_GameOver = false;
 	// Use this for initialization
 	void Start () {
         m_CountDownTimeSecondsRoRender = m_CountDownSeconds;
@@ -43,7 +45,11 @@ public class DrinkWaterGD : MonoBehaviour {
     }
 
     public void OnTimeOut() {
-        ShowDrinkWaterResult((int)m_DrinkWaterSeconds, (int)m_CountDownSeconds);
+        if (!m_GameOver) {
+            ShowDrinkWaterResult((int)m_DrinkWaterSeconds, (int)m_CountDownSeconds);
+            m_GameOver = true;
+        }
+            
     }
 
     private void ShowDrinkWaterResult(int drinkWater, int totalTime)
@@ -52,10 +58,10 @@ public class DrinkWaterGD : MonoBehaviour {
         m_DrinkWaterResultPanel.SetActive(true);
 
         UnityEngine.UI.Text drinkWaterSecondsResultText = GameObject.Find("drinkWaterSecondsResultText").GetComponent<UnityEngine.UI.Text>();
-        drinkWaterSecondsResultText.text = "喝水量：" + drinkWater.ToString();
+        drinkWaterSecondsResultText.text = "喝水量：   " + drinkWater.ToString();
         
         UnityEngine.UI.Text drinkTimeText = GameObject.Find("drinkTimeText").GetComponent<UnityEngine.UI.Text>();
-        drinkTimeText.text = "总耗时：" + totalTime.ToString();
+        drinkTimeText.text = "总耗时：   " + totalTime.ToString();
 
         GameDatabase.GetInstance().thirst += (int)this.GetDrinkingWaterPercent();
     }
