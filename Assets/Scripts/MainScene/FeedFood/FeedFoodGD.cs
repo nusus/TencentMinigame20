@@ -9,6 +9,11 @@ public class FeedFoodGD : MonoBehaviour {
     public BallController2D m_BallController;
 
     private FeedFoodUIManager m_FeedFoodUIManager;
+
+    private AudioSource m_As;
+
+    public SphereCollider m_FoodCollider;
+    public SphereCollider m_BabyCollider;
     void Awake()
     {
         
@@ -24,12 +29,24 @@ public class FeedFoodGD : MonoBehaviour {
         m_FeedFoodUIManager.ChangeLeftTimes(m_LeftTimes);
 
         Screen.orientation = ScreenOrientation.Landscape;
+
+        m_As = GetComponent<AudioSource>();
     }
 	
 	// Update is called once per frame
 	void Update () {
+        Vector3 distanceVector = m_FoodCollider.transform.position - m_BabyCollider.transform.position;
+        if (distanceVector.magnitude < m_FoodCollider.radius + m_BabyCollider.radius) {
+            OnFoodBabyCollision();
+        }
 	
 	}
+
+    private void OnFoodBabyCollision()
+    {
+        FDBabyController fdbc = GameObject.Find("baby").GetComponent<FDBabyController>();
+        fdbc.OnFoodBabyCollision();
+    }
 
     public void AddHitTimes()
     {
@@ -79,7 +96,8 @@ public class FeedFoodGD : MonoBehaviour {
 
     public void QuitFeedFoodScene()
     {
+        m_As.Stop();
         UnityEngine.SceneManagement.SceneManager.LoadScene("mainui");
-        UnityEngine.SceneManagement.SceneManager.UnloadScene("FeedFood2D");
+        //UnityEngine.SceneManagement.SceneManager.UnloadScene("FeedFood2D");
     }
 }

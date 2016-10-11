@@ -14,9 +14,9 @@ public class FDBabyController : MonoBehaviour {
   
 	// Use this for initialization
 	void Start () {
-        m_Animator = this.GetComponent<Animator>();
+        m_Animator = gameObject.GetComponent<Animator>();
         m_GameDirector = GameObject.Find("GameDirector").GetComponent<FeedFoodGD>();
-        m_Animator.SetInteger("walkingDirection", (int)m_WalkingDirection);
+        //m_Animator.SetInteger("walkingDirection", (int)m_WalkingDirection);
 
     }
 	
@@ -42,7 +42,7 @@ public class FDBabyController : MonoBehaviour {
         m_Animator.SetInteger("walkingDirection", (int)m_WalkingDirection);
     }
 
-    void OnCollisionEnter2D()
+    void OnCollisionEnter(Collision coll)
     {
         print("collision");
         m_Animator.SetTrigger("eatFood");
@@ -52,9 +52,19 @@ public class FDBabyController : MonoBehaviour {
         m_GameDirector.TryAgain();
     }
 
-    void OnTriggerEnter2D(Collider2D coll)
+    void OnTriggerEnter(Collider coll)
+    {
+        print("trigger");
+    }
+
+    public void OnFoodBabyCollision()
     {
         print("collision");
+        m_Animator.SetTrigger("eatFood");
+        m_IsEatingFood = true;
+        m_GameDirector.AddHitTimes();
+        m_GameDirector.DecreaseLeftTimes();
+        m_GameDirector.TryAgain();
     }
 
 }

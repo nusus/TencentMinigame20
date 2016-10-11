@@ -27,6 +27,8 @@ public class BallController2D : MonoBehaviour {
     /// </summary>
     public float m_SlingFactor;
     public float m_BallMovingClmapRadius;
+
+    private AudioSource m_As;
     void Start()
     {
         m_FoodSprite = this.gameObject.GetComponent<SpriteRenderer>().sprite;
@@ -41,6 +43,7 @@ public class BallController2D : MonoBehaviour {
         {
             m_MovingSensitivity = 1.0f;
         }
+        m_As = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -73,6 +76,7 @@ public class BallController2D : MonoBehaviour {
             {
                 ChangeBallPosition();
                 ChangeRopePosition();
+                //m_As.Play();
             }
             else
             {
@@ -117,8 +121,8 @@ public class BallController2D : MonoBehaviour {
     protected void ShotBall()
     {
         Vector3 dir = (m_BallOrigLocalPosition - transform.localPosition).normalized;
-        transform.GetComponent<Rigidbody2D>().gravityScale = 1;
-        transform.GetComponent<Rigidbody2D>().AddForce(dir * m_SlingFactor, ForceMode2D.Impulse);
+        transform.GetComponent<Rigidbody>().useGravity = true;
+        transform.GetComponent<Rigidbody>().AddForce(dir * m_SlingFactor, ForceMode.Impulse);
         m_SlingshotState = SlingshotState.Shotting;
     }
 
@@ -133,8 +137,8 @@ public class BallController2D : MonoBehaviour {
     protected void BallRevert()
     {
         transform.localPosition = m_BallOrigLocalPosition;
-        transform.GetComponent<Rigidbody2D>().gravityScale = 0;
-        transform.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+        transform.GetComponent<Rigidbody>().useGravity = false;
+        transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
     }
 
     private void ChangeRopePosition(Vector3 leftPos, Vector3 rightPos)
@@ -148,10 +152,11 @@ public class BallController2D : MonoBehaviour {
     {
         //version 2
         bool ret = false;
-        RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(touchingPosition), Vector2.zero);
-        if (hit.collider != null)
+        RaycastHit hitInfo;
+        bool hitRet = Physics.Raycast(Camera.main.ScreenToWorldPoint(touchingPosition), Vector3.forward, out hitInfo);
+        if (hitRet)
         {
-            if (hit.transform.name.Equals("food"))
+            if (hitInfo.collider.transform.name.Equals("food"))
             {
                 ret = true;
             }

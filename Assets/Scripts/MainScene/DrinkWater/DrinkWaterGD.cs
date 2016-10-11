@@ -15,11 +15,14 @@ public class DrinkWaterGD : MonoBehaviour {
     public GameObject m_DrinkWaterResultPanel;
 
     private bool m_GameOver = false;
+
+    private AudioSource m_As;
 	// Use this for initialization
 	void Start () {
         m_CountDownTimeSecondsRoRender = m_CountDownSeconds;
         m_DrinkWaterUIManager = GameObject.Find("LobbyUI").GetComponent<DrinkWaterUIManager>();
-
+        m_As = GetComponent<AudioSource>();
+        m_As.Play();
     }
 	
 	// Update is called once per frame
@@ -36,8 +39,9 @@ public class DrinkWaterGD : MonoBehaviour {
 
     public void QuitDrinkWaterScene()
     {
+        m_As.Stop();
         UnityEngine.SceneManagement.SceneManager.LoadScene("mainui");
-        UnityEngine.SceneManagement.SceneManager.UnloadScene("DrinkWater");
+        //UnityEngine.SceneManagement.SceneManager.UnloadScene("DrinkWater");
     }
 
     public void OnQuitButtonClicked() {
