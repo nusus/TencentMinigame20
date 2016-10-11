@@ -52,7 +52,7 @@ public class Drama : MonoBehaviour
     {
         for (int i = 0; i < dramaImage.Length; i++)
         {
-            dramaImage[i].SetActive(false);
+            //dramaImage[i].SetActive(false);
             guiText.text = "";
         }
     }
@@ -60,7 +60,7 @@ public class Drama : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        dramaImage[0].SetActive(true);
+        dramaImage[imageUI].SetActive(true);
 
         if (Input.touchCount > 0 || Input.GetMouseButtonDown(0))
         {
@@ -69,7 +69,6 @@ public class Drama : MonoBehaviour
             switch (dramaSceneSelect)
             {
                 case (int)dramaScene.Chapter0:
-                    dramaImage[imageUI].SetActive(true);
 
                     //modify text and image, will take effect at next click.
                     switch (textContent)
@@ -93,12 +92,10 @@ public class Drama : MonoBehaviour
                             break;
                         case 4:
                             guiText.text = "而此刻夜空中，一个神秘的影子一闪而过，化作光点在东方的夜空中消失了……";
+                            textContent = 5;
                             break;
                         default:
-                            //SceneManager.LoadScene("mainui", LoadSceneMode.Single);
-                            dramaSceneSelect = (int)dramaScene.Chapter1;
-                            textContent = 0;
-                            dramaImage[dramaSceneSelect].SetActive(true);
+                            SceneManager.LoadScene("mainui", LoadSceneMode.Single);
                             break;
                     }
                     break;
@@ -122,9 +119,12 @@ public class Drama : MonoBehaviour
                             textContent = 4;
                             break;
                         case 4:
-                            guiText.text = @"虽然小外星人和小男孩儿语言上还无法沟通，但是他们的感情却跨越了一切外在的障碍联系
-到一起，尽管他们的外型有如此大的差异，但却都有着一颗善良敏感、渴望着爱和呵护的童心。";
+                            guiText.text = "虽然小外星人和小男孩儿语言上还无法沟通，但是他们的感情却跨越了一切外在的障碍联系到一起";
                             textContent = 5;
+                            break;
+                        case 5:
+                            guiText.text = "尽管他们的外型有如此大的差异，但却都有着一颗善良敏感、渴望着爱和呵护的童心。";
+                            textContent = 6;
                             break;
                         default:
                             SceneManager.LoadScene("mainui", LoadSceneMode.Single);
