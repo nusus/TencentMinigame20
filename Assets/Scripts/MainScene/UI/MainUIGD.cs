@@ -51,10 +51,10 @@ public class MainUIGD : MonoBehaviour {
 
     private MainUIBaby m_Baby;
     void Awake() {
-        Screen.orientation = ScreenOrientation.Portrait;
     }
 	// Use this for initialization
 	void Start () {
+        Screen.orientation = ScreenOrientation.Portrait;
         db = GameDatabase.GetInstance();
         asource = gameObject.GetComponent<AudioSource>();
         if (db.isFirstStart) {
@@ -75,7 +75,7 @@ public class MainUIGD : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         m_TimeTick += Time.deltaTime;
-        if (m_TimeTick > 5.0f) {
+        if (m_TimeTick > 10.0f) {
             OnSecond();
             m_TimeTick = 0.0f;
         }
@@ -116,6 +116,7 @@ public class MainUIGD : MonoBehaviour {
 
         db.health = (int)((db.psychology * db.hunger * db.thirst * db.energy) * 0.25);
 
+        db.experience += 1;
     }
 
     public void OnExitException()

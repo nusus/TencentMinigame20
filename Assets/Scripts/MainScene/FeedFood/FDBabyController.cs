@@ -59,11 +59,11 @@ public class FDBabyController : MonoBehaviour {
 
     public void OnFoodBabyCollision()
     {
-        print("collision");
+        //print("collision");
         m_Animator.SetTrigger("eatFood");
-        m_IsEatingFood = true;
+        //m_IsEatingFood = true;
         m_GameDirector.AddHitTimes();
-        m_GameDirector.DecreaseLeftTimes();
+        //m_GameDirector.DecreaseLeftTimes();
         m_GameDirector.TryAgain();
     }
 

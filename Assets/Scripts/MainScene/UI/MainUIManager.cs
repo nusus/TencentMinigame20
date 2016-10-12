@@ -25,12 +25,14 @@ public class MainUIManager : MonoBehaviour {
     // Use this for initialization
     void Start () {
         
-        OnShow();
+        OnShow(1);
 	
 	}
 
-    public void OnShow()
+    public void OnShow(int updateFrequence)
     {
+        if ((int)Time.realtimeSinceStartup % updateFrequence != 0)
+            return;
         GameDatabase db = GameDatabase.GetInstance();
         OnLevelChanged(db.level);
         OnExperienceValueChanged(db.experience);
@@ -40,7 +42,8 @@ public class MainUIManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        OnShow();
+        
+        OnShow(10);
 	
 	}
 

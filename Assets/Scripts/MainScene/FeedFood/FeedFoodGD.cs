@@ -23,12 +23,11 @@ public class FeedFoodGD : MonoBehaviour {
         Screen.orientation = ScreenOrientation.LandscapeLeft;
 
         m_FeedFoodUIManager = GameObject.Find("UIManager").GetComponent<FeedFoodUIManager>();
+
         m_LeftTimes = m_TotalTimes;
         m_HitTimes = 0;
         m_FeedFoodUIManager.ChangeHitTimes(m_HitTimes);
         m_FeedFoodUIManager.ChangeLeftTimes(m_LeftTimes);
-
-        Screen.orientation = ScreenOrientation.Landscape;
 
         m_As = GetComponent<AudioSource>();
     }
@@ -91,6 +90,7 @@ public class FeedFoodGD : MonoBehaviour {
         {
             m_LeftTimes = 0;
         }
+        GameDatabase.GetInstance().hunger += m_HitTimes * 3;
         m_FeedFoodUIManager.ShowResultPanel(m_HitTimes, m_LeftTimes);
     }
 
