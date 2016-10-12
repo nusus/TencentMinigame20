@@ -54,7 +54,7 @@ public class BabyController : CircleMoveController {
 
     public void OnParticleCollision(GameObject other)
     {
-        m_GameDirector.IncreaseDrinkWaterSeconds(Time.deltaTime);
+        m_GameDirector.IncreaseDrinkWaterSeconds(Time.deltaTime * 6.1f);
         m_NotDrinkingWaterTime = 2.0f;
         m_IsDrinkingWater = true;
         m_BabyActionAnimator.SetTrigger("drinkingWater");

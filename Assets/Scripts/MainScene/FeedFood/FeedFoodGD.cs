@@ -30,6 +30,7 @@ public class FeedFoodGD : MonoBehaviour {
         m_FeedFoodUIManager.ChangeLeftTimes(m_LeftTimes);
 
         m_As = GetComponent<AudioSource>();
+        m_As.Play();
     }
 	
 	// Update is called once per frame

@@ -60,7 +60,9 @@ public class MainUIGD : MonoBehaviour {
         if (db.isFirstStart) {
             db.thirst = m_ThirstDefaultValue;
             db.hunger = m_HungerDefaultValue;
-            db.energy = m_HungerDefaultValue;
+            db.energy = m_EnergyDefaultValue;
+            db.health = (int)((db.hunger * 0.3 + db.thirst * 0.3 + db.energy * 0.4));
+            db.experience = 1;
             db.isFirstStart = false;
             GameDatabase.GetInstance().drama = GameDatabase.GetInstance().level / 10 + 1;
             UnityEngine.SceneManagement.SceneManager.LoadScene("Chapter0");
@@ -107,6 +109,7 @@ public class MainUIGD : MonoBehaviour {
         db.energy -= m_EnergyLosingSpeed;
         if (db.energy < m_EnergyStandard)
         {
+            db.energy += m_EnergyLosingSpeed * 2;
             m_Baby.OnEnergyLowerStandard();
         }
 
@@ -114,7 +117,7 @@ public class MainUIGD : MonoBehaviour {
 
         db.money += m_CoinIncreasingSpeed;
 
-        db.health = (int)((db.psychology * db.hunger * db.thirst * db.energy) * 0.25);
+        db.health = (int)((db.hunger * 0.3 + db.thirst * 0.3 + db.energy * 0.4) );
 
         db.experience += 1;
     }
