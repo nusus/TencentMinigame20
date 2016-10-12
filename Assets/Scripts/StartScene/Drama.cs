@@ -35,6 +35,10 @@ public class Drama : MonoBehaviour
     //the index of text content
     private int textContent;
 
+    //using to record touch status,
+    //avoid to show the drama too quick.
+    private bool touchStat;
+
     // Use this for initialization
     void Start()
     {
@@ -46,6 +50,8 @@ public class Drama : MonoBehaviour
         //if a drama has multiple image background
         //using switch instead.
         imageUI = dramaSceneSelect;
+
+        touchStat = false;
     }
 
     void clearActive()
@@ -62,8 +68,14 @@ public class Drama : MonoBehaviour
     {
         dramaImage[imageUI].SetActive(true);
 
-        if (Input.touchCount > 0 || Input.GetMouseButtonDown(0))
+        if(Input.touchCount == 0)
         {
+            touchStat = false;
+        }
+
+        if (touchStat == false && ( Input.touchCount > 0 || Input.GetMouseButtonDown(0)))
+        {
+            touchStat = true;
             clearActive();
 
             switch (dramaSceneSelect)
@@ -73,7 +85,7 @@ public class Drama : MonoBehaviour
                     //modify text and image, will take effect at next click.
                     switch (textContent)
                     {
-                            //change to next text during click.
+                        //change to next text during click.
                         case 0:
                             guiText.text = "";
                             textContent = 1;
@@ -211,11 +223,6 @@ public class Drama : MonoBehaviour
                     SceneManager.LoadScene("mainui", LoadSceneMode.Single);
                     break;
             }
-
-
-            //clear the image and text.
-
-
         }
     }
 }
