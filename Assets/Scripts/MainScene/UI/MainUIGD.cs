@@ -75,7 +75,7 @@ public class MainUIGD : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         m_TimeTick += Time.deltaTime;
-        if (m_TimeTick > 1.0f) {
+        if (m_TimeTick > 5.0f) {
             OnSecond();
             m_TimeTick = 0.0f;
         }
