@@ -125,7 +125,7 @@ public class InitializeFacebookLogin : MonoBehaviour
             database.token = aToken.ToString();
             database.userID = aToken.UserId;
             FB.API("/me?fields=name", HttpMethod.GET, loginName);
-            text.text = ("Welcome Back!");
+            text.text = ("Welcome Back! " + database.name);
 
             //foreach (string perm in aToken.Permissions)
             //{
