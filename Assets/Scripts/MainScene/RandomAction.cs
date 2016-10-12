@@ -26,9 +26,9 @@ public class RandomAction : MonoBehaviour
     [HideInInspector]
     public Animator IdleRandomControll;
 
-    [Header("超时时间")]
-    [Tooltip("设备处于空闲状态（没有触摸）超过这个时间，宠物会睡觉，单位为秒")]
-    public float idleEclapseTime;
+    //[Header("超时时间")]
+    //[Tooltip("设备处于空闲状态（没有触摸）超过这个时间，宠物会睡觉，单位为秒")]
+    //public float idleEclapseTime;
 
     //Needless to know, private variables, for performance or other perpose
 
@@ -86,6 +86,11 @@ public class RandomAction : MonoBehaviour
         shakeDetectionThreshold = 2.0f;
         lowPassFilterFactor = accelerometerUpdateInterval / lowPassKernelWidthInSeconds;
         lowPassValue = Input.acceleration;
+
+        IdleRandomControll.SetBool("isLowEnergy", false);
+        IdleRandomControll.SetBool("isHungry", false);
+        IdleRandomControll.SetBool("isThirsty", false);
+
     }
 
     // Update is called once per frame
@@ -96,7 +101,6 @@ public class RandomAction : MonoBehaviour
         isThirsty = IdleRandomControll.GetBool("isThirsty");
         isHungry = IdleRandomControll.GetBool("isHungry");
         isLowEnergy = IdleRandomControll.GetBool("isThirsty");
-
         if(isLowEnergy)
         {
             //shake detection

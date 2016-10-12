@@ -15,11 +15,14 @@ public class InitializeFacebookLogin : MonoBehaviour
     [Tooltip("这个物体用于显示用户头像的")]
     public GameObject headMesh;
 
+    public GameObject uiButton;
+
     private GameDatabase database;
 
     void Start()
     {
         text.text = null;
+        Screen.orientation = ScreenOrientation.Portrait;
         database = GameDatabase.GetInstance();
     }
 
@@ -114,13 +117,16 @@ public class InitializeFacebookLogin : MonoBehaviour
         else if (!string.IsNullOrEmpty(result.RawResult))
         {
             Debug.Log("Success");
+            uiButton.SetActive(false);
             var aToken = AccessToken.CurrentAccessToken;
             //Debug.Log(aToken.TokenString);
             //StartCoroutine(getImage(AccessToken.CurrentAccessToken));
             //text.text = aToken.TokenString;
             database.token = aToken.ToString();
             database.userID = aToken.UserId;
-            FB.API("/me?fields=first_name", HttpMethod.GET, loginName);
+            FB.API("/me?fields=name", HttpMethod.GET, loginName);
+            text.text = ("Welcome Back!");
+
             //foreach (string perm in aToken.Permissions)
             //{
             //    Debug.Log(perm);
