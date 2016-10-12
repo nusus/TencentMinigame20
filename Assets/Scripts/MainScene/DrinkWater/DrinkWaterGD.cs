@@ -19,6 +19,7 @@ public class DrinkWaterGD : MonoBehaviour {
     private AudioSource m_As;
 	// Use this for initialization
 	void Start () {
+        Screen.orientation = ScreenOrientation.Portrait;
         m_CountDownTimeSecondsRoRender = m_CountDownSeconds;
         m_DrinkWaterUIManager = GameObject.Find("LobbyUI").GetComponent<DrinkWaterUIManager>();
         m_As = GetComponent<AudioSource>();
@@ -67,7 +68,7 @@ public class DrinkWaterGD : MonoBehaviour {
         UnityEngine.UI.Text drinkTimeText = GameObject.Find("drinkTimeText").GetComponent<UnityEngine.UI.Text>();
         drinkTimeText.text = "总耗时：   " + totalTime.ToString();
 
-        GameDatabase.GetInstance().thirst += (int)this.GetDrinkingWaterPercent();
+        GameDatabase.GetInstance().thirst += (int)this.GetDrinkingWaterPercent() * 10;
     }
 
     public void IncreaseDrinkWaterSeconds(float seconds)
@@ -87,6 +88,8 @@ public class DrinkWaterGD : MonoBehaviour {
 
     public float GetDrinkingWaterPercent()
     {
-        return m_DrinkWaterSeconds / m_CountDownSeconds * 100;
+        float ret = m_DrinkWaterSeconds / m_CountDownSeconds;
+        ret = ret > 1.0f ? 1.0f : ret;
+        return ret;
     }
 }

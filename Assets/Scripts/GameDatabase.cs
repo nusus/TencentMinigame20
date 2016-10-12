@@ -39,7 +39,7 @@ public class GameDatabase {
 
     private void Init()
     {
-
+        money = 80;
     }
 
     private bool Sync()
