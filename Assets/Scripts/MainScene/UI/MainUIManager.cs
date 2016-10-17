@@ -96,11 +96,13 @@ public class MainUIManager : MonoBehaviour {
 
     public void OnUpgradeConfirm()
     {
+        m_UpdatePanel.SetActive(false);
         if (GameDatabase.GetInstance().level % 10 == 0)
         {
             GameDatabase.GetInstance().drama = GameDatabase.GetInstance().level / 10 + 1;
             UnityEngine.SceneManagement.SceneManager.LoadScene("Chapter0");
         }
+        
     }
 
     private void ChangeNumberSprite(UnityEngine.UI.Image image, int number)
