@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using UnityEngine.Profiling;
 public class ScreenStream: MonoBehaviour
 {
 	public Texture logo = null;
