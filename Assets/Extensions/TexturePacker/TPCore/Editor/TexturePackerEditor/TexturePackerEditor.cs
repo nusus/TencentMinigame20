@@ -35,7 +35,7 @@ public class TexturePackerEditor : EditorWindow {
 
 
 	void OnGUI() {
-		title = "Texture Packer";
+		titleContent.text = "Texture Packer";
 		atlasEditor.render();
 
 

@@ -113,7 +113,7 @@ public class RotateResult
         Vector3 new_x                   = minus(x, x_projection_on_up);
         new_x                           = dot(new_x, 1 / norm(new_x));
 
-        Vector3 random   = new Vector3(Random.RandomRange((float)0.0, (float)1.0), Random.RandomRange((float)0.0, (float)1.0), Random.RandomRange((float)0.0, (float)1.0));
+        Vector3 random   = new Vector3(Random.Range((float)0.0, (float)1.0), Random.Range((float)0.0, (float)1.0), Random.Range((float)0.0, (float)1.0));
         random           = dot(random, 1 / norm(random));
  
 
